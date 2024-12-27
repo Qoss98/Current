@@ -17,6 +17,8 @@ public class Current extends Application {
 
         GridPane root = new GridPane();
         Scene scene = new Scene(root, 1500, 800);
+        root.setVgap(10);
+        root.setHgap(10);
 
 
         stage.setTitle("Current Energy");
@@ -84,6 +86,8 @@ public class Current extends Application {
                 data.setJaarlijksVoorschot(Double.parseDouble(txtVoorschot.getText()));
                 data.setHuidigeGasprijs(Double.parseDouble(txtGas.getText()));
                 data.setHuidigeStroomprijs(Double.parseDouble(txtStroom.getText()));
+                data.setVerbruikStroom(Double.parseDouble(txtVerbruikStroom.getText()));
+                data.setVerbruikGas(Double.parseDouble(txtVerbruikGas.getText()));
 
                 data.printData(output);
             } catch (NumberFormatException ex) {

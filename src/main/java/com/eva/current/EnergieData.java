@@ -7,6 +7,9 @@ public class EnergieData {
     private double huidigeGasprijs;
     private double huidigeStroomprijs;
 
+    private double verbruikStroom;
+    private double verbruikGas;
+
 
 
     public void setJaarlijksVoorschot(double jaarlijksVoorschot) {
@@ -21,10 +24,19 @@ public class EnergieData {
         this.huidigeGasprijs = huidigeGasprijs;
     }
 
+    public void setVerbruikStroom(double verbruikStroom) {
+        this.verbruikStroom = verbruikStroom;
+    }
+
+    public void setVerbruikGas(double verbruikGas) {
+        this.verbruikGas = verbruikGas;
+    }
+
     public void printData(Label output) {
         String data = "Jaarlijks Voorschot: " + jaarlijksVoorschot + "\n" +
                 "Gasprijs: " + huidigeGasprijs + "\n" +
-                "Stroomprijs: " + huidigeStroomprijs;
+                "Stroomprijs: " + huidigeStroomprijs
+                + "\n" + "Verbruik Stroom: " + verbruikStroom + "\n" + "Verbruik Gas: " + verbruikGas;
         output.setText(data);
     }
 }
