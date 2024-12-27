@@ -11,7 +11,7 @@ import javafx.scene.control.DatePicker;
 
 import java.io.IOException;
 
-public class HelloApplication extends Application {
+public class Current extends Application {
     @Override
     public void start(Stage stage) throws IOException {
 
@@ -47,38 +47,30 @@ public class HelloApplication extends Application {
         Label dataTotStroomL = new Label("Datum tot: ");
         DatePicker dataTotStroom = new DatePicker();
 
+        Label verbruikStroom = new Label("Verbruik Stroom in kwh: ");
+        TextField txtVerbruikStroom = new TextField();
+        Label verbruikGas = new Label("Verbruik Gas in m3: ");
+        TextField txtVerbruikGas = new TextField();
+        Label dataVanafVerbruikL = new Label("Datum vanaf: ");
+        DatePicker dataVanafVerbruik = new DatePicker();
+        Label dataTotVerbruikL = new Label("Datum tot: ");
+        DatePicker dataTotVerbruik = new DatePicker();
+
         Button verzend = new Button("Verzend");
 
         Label output = new Label();
 
-        GridPane.setConstraints(klantnr, 0, 0);
-        GridPane.setConstraints(txtKlantnr, 1, 0);
-        GridPane.setConstraints(vNaam, 0, 1);
-        GridPane.setConstraints(txtVNaam, 1, 1);
-        GridPane.setConstraints(aNaam, 0, 2);
-        GridPane.setConstraints(txtANaam, 1, 2);
-        GridPane.setConstraints(jVoorschot, 0, 3);
-        GridPane.setConstraints(txtVoorschot, 1, 3);
+        Constraints constraints = new Constraints();
+        constraints.InputFields3(klantnr, txtKlantnr, vNaam, txtVNaam, aNaam, txtANaam, jVoorschot, txtVoorschot);
+        constraints.InputFields1(hgas, txtGas, dataVanafGasL, dataVanafGas, dataTotGasL, dataTotGas);
+        constraints.InputFields4(hstroom, txtStroom, dataVanafStroomL, dataVanafStroom, dataTotStroomL, dataTotStroom);
+        constraints.InputFields2(verbruikStroom, txtVerbruikStroom, verbruikGas, txtVerbruikGas, dataVanafVerbruikL, dataVanafVerbruik, dataTotVerbruikL, dataTotVerbruik);
 
-        GridPane.setConstraints(hgas, 0, 4);
-        GridPane.setConstraints(txtGas, 1, 4);
-        GridPane.setConstraints(dataVanafGasL, 2, 4);
-        GridPane.setConstraints(dataVanafGas, 3, 4);
-        GridPane.setConstraints(dataTotGasL, 4, 4);
-        GridPane.setConstraints(dataTotGas, 5, 4);
-
-        GridPane.setConstraints(hstroom, 0, 5);
-        GridPane.setConstraints(txtStroom, 1, 5);
-        GridPane.setConstraints(dataVanafStroomL, 2, 5);
-        GridPane.setConstraints(dataVanafStroom, 3, 5);
-        GridPane.setConstraints(dataTotStroomL, 4, 5);
-        GridPane.setConstraints(dataTotStroom, 5, 5);
-
-        GridPane.setConstraints(verzend, 0, 6);
-        GridPane.setConstraints(output, 0, 7);
+        GridPane.setConstraints(verzend, 0, 10);
+        GridPane.setConstraints(output, 0, 11);
 
 
-        root.getChildren().addAll(klantnr, txtKlantnr, vNaam, txtVNaam, aNaam, txtANaam, jVoorschot, txtVoorschot, hgas, txtGas, dataVanafGasL, dataVanafGas, dataTotGasL, dataTotGas, hstroom, txtStroom, dataVanafStroomL, dataVanafStroom, dataTotStroomL, dataTotStroom, verzend, output);
+        root.getChildren().addAll(klantnr, txtKlantnr, vNaam, txtVNaam, aNaam, txtANaam, jVoorschot, txtVoorschot, hgas, txtGas, dataVanafGasL, dataVanafGas, dataTotGasL, dataTotGas, hstroom, txtStroom, dataVanafStroomL, dataVanafStroom, dataTotStroomL, dataTotStroom, verbruikStroom, txtVerbruikStroom, verbruikGas, txtVerbruikGas, dataVanafVerbruikL, dataVanafVerbruik, dataTotVerbruikL, dataTotVerbruik, verzend, output);
 
         verzend.setOnAction(e -> {
             EnergieData data = new EnergieData();
@@ -102,6 +94,7 @@ public class HelloApplication extends Application {
         });
         stage.show();
     }
+
 
 
 }
