@@ -3,14 +3,12 @@ package com.eva.current;
 import javafx.scene.control.Label;
 
 public class EnergieData {
-    private double jaarlijksVoorschot;
-    private double huidigeGasprijs;
-    private double huidigeStroomprijs;
 
-    private double verbruikStroom;
-    private double verbruikGas;
-    private double totaalPrijs;
-    private double totaalVerbruik;
+    private final double jaarlijksVoorschot;
+    private final double huidigeGasprijs;
+    private final double huidigeStroomprijs;
+    private final double verbruikStroom;
+    private final double verbruikGas;
 
     public EnergieData(double jaarlijksVoorschot, double huidigeGasprijs, double huidigeStroomprijs, double verbruikStroom, double verbruikGas) {
         this.jaarlijksVoorschot = jaarlijksVoorschot;
@@ -20,16 +18,38 @@ public class EnergieData {
         this.verbruikGas = verbruikGas;
     }
 
-
-
-
-    public void printData(Label output) {
-        String data = "Jaarlijks Voorschot: " + jaarlijksVoorschot + "\n" +
-                "Gasprijs: " + huidigeGasprijs + "\n" +
-                "Stroomprijs: " + huidigeStroomprijs
-                + "\n" + "Verbruik Stroom: " + verbruikStroom + "\n" + "Verbruik Gas: " + verbruikGas;
-        output.setText(data);
+    public double getJaarlijksVoorschot() {
+        return jaarlijksVoorschot;
     }
+
+    public double getHuidigeGasprijs() {
+        return huidigeGasprijs;
+    }
+
+    public double getHuidigeStroomprijs() {
+        return huidigeStroomprijs;
+    }
+
+    public double getVerbruikStroom() {
+        return verbruikStroom;
+    }
+
+    public double getVerbruikGas() {
+        return verbruikGas;
+    }
+
+
+
+
+
+
+//    public void printData(Label output) {
+//        String data = "Jaarlijks Voorschot: " + jaarlijksVoorschot + "\n" +
+//                "Gasprijs: " + huidigeGasprijs + "\n" +
+//                "Stroomprijs: " + huidigeStroomprijs
+//                + "\n" + "Verbruik Stroom: " + verbruikStroom + "\n" + "Verbruik Gas: " + verbruikGas;
+//        output.setText(data);
+//    }
 
 }
 

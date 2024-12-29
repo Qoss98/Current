@@ -3,6 +3,8 @@ package com.eva.current;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 
+import java.util.ArrayList;
+
 public class EnergyFormPane extends GridPane {
 
     // Define the components as fields
@@ -23,6 +25,8 @@ public class EnergyFormPane extends GridPane {
     private final DatePicker dataTotVerbruik = new DatePicker();
 
     private final Label output = new Label();
+
+    ArrayList<EnergieData> energieData = new ArrayList<>();
 
     public EnergyFormPane(Constraints constraints) {
         // Set up the GridPane
@@ -47,6 +51,7 @@ public class EnergyFormPane extends GridPane {
 
         // Submit button
         Button verzend = new Button("Verzend");
+        Button toonGemiddelde = new Button("Toon Gemiddelde");
 
         // Apply constraints using the Constraints class
         constraints.InputFields3(klantnr, txtKlantnr, vNaam, txtVNaam, aNaam, txtANaam, jVoorschot, txtVoorschot);
@@ -61,15 +66,26 @@ public class EnergyFormPane extends GridPane {
                 dataTotGasL, dataTotGas, hstroom, txtStroom, dataVanafStroomL, dataVanafStroom,
                 dataTotStroomL, dataTotStroom, verbruikStroom, txtVerbruikStroom, verbruikGas,
                 txtVerbruikGas, dataVanafVerbruikL, dataVanafVerbruik, dataTotVerbruikL,
-                dataTotVerbruik, verzend, output
+                dataTotVerbruik, verzend, toonGemiddelde, output
         );
 
         // Set constraints for the submit button and output label
         GridPane.setConstraints(verzend, 0, 10);
-        GridPane.setConstraints(output, 0, 11);
+        GridPane.setConstraints(toonGemiddelde, 0, 11);
+        GridPane.setConstraints(output, 0, 12);
 
         // Set up the button action
         verzend.setOnAction(e -> handleSubmit());
+        DataCalculator dataCalculator = new DataCalculator();
+        toonGemiddelde.setOnAction(e -> {
+        if (energieData.isEmpty()){
+            output.setText("Er zijn nog geen gegevens ingevoerd");
+        }else{
+            DataCalculator.calculateAverage(energieData);
+            String average = DataCalculator.calculateAverage(energieData);
+            output.setText(average);
+        }
+    });
     }
 
     // Event handler for the "Verzend" button
@@ -90,8 +106,12 @@ public class EnergyFormPane extends GridPane {
                     Double.parseDouble(txtVerbruikGas.getText())
             );
 
+            energieData.add(data);
+            output.setText("Data opgeslagen. Totaal aantal: " + energieData.size());
+
+
             // Print data to the output label
-            data.printData(output);
+//            data.printData(output);
         } catch (NumberFormatException ex) {
             output.setText("Vul geldige getallen in");
         }
