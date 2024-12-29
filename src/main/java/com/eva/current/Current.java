@@ -15,6 +15,7 @@ public class Current extends Application {
     @Override
     public void start(Stage stage) throws IOException {
 
+
         Constraints constraints = new Constraints();
 
         EnergyFormPane energyFormPane = new EnergyFormPane(constraints);

@@ -20,6 +20,8 @@ public class EnergieData {
     }
 
 
+
+
     public void printData(Label output) {
         String data = "Jaarlijks Voorschot: " + jaarlijksVoorschot + "\n" +
                 "Gasprijs: " + huidigeGasprijs + "\n" +
@@ -27,7 +29,6 @@ public class EnergieData {
                 + "\n" + "Verbruik Stroom: " + verbruikStroom + "\n" + "Verbruik Gas: " + verbruikGas;
         output.setText(data);
     }
-
 
 }
 
