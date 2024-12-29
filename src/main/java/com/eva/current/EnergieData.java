@@ -9,7 +9,7 @@ public class EnergieData {
 
     private double verbruikStroom;
     private double verbruikGas;
-
+    private double totaalPrijs;
 
     public EnergieData(double jaarlijksVoorschot, double huidigeGasprijs, double huidigeStroomprijs, double verbruikStroom, double verbruikGas) {
         this.jaarlijksVoorschot = jaarlijksVoorschot;
