@@ -81,8 +81,12 @@ public class EnergyFormPane extends GridPane {
         if (energieData.isEmpty()){
             output.setText("Er zijn nog geen gegevens ingevoerd");
         }else{
-            DataCalculator.calculateAverage(energieData);
-            String average = DataCalculator.calculateAverage(energieData);
+//            DataCalculator.calculateAverage(energieData);
+//            String average = DataCalculator.calculateAverage(energieData);
+//            output.setText(average);
+//
+//            DataCalculator.calculateAverageWeekly(energieData);
+           String average = WeeklyDataCalculator.calculateAverage(energieData);
             output.setText(average);
         }
     });
