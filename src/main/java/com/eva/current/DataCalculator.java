@@ -15,9 +15,9 @@ public class DataCalculator {
         int count = energieDataLijst.size();
 
         for (EnergieData energieData : energieDataLijst) {
-            totalVoorschot = energieData.getJaarlijksVoorschot();
-            totalGas += energieData.getHuidigeGasprijs();
-            totalStroom += energieData.getHuidigeStroomprijs();
+//            totalVoorschot = energieData.getJaarlijksVoorschot();
+//            totalGas += energieData.getHuidigeGasprijs();
+//            totalStroom += energieData.getHuidigeStroomprijs();
             totalVerbruikStroom += energieData.getVerbruikStroom();
             totalVerbruikGas += energieData.getVerbruikGas();
         }
@@ -54,9 +54,9 @@ class WeeklyDataCalculator extends DataCalculator {
         double weeklyVerbruikGas = 0;
 
         for (EnergieData energieData : energieDataLijst) {
-            weeklyVoorschot += energieData.getJaarlijksVoorschot();
-            weeklyGas += energieData.getHuidigeGasprijs();
-            weeklyStroom += energieData.getHuidigeStroomprijs();
+//            weeklyVoorschot += energieData.getJaarlijksVoorschot();
+//            weeklyGas += energieData.getHuidigeGasprijs();
+//            weeklyStroom += energieData.getHuidigeStroomprijs();
             weeklyVerbruikStroom += energieData.getVerbruikStroom();
             weeklyVerbruikGas += energieData.getVerbruikGas();
             count++;
@@ -108,9 +108,9 @@ class MonthlyDataCalculator extends DataCalculator {
         double monthlyVerbruikGas = 0;
 
         for (EnergieData energieData : energieDataLijst) {
-            monthlyVoorschot += energieData.getJaarlijksVoorschot();
-            monthlyGas += energieData.getHuidigeGasprijs();
-            monthlyStroom += energieData.getHuidigeStroomprijs();
+//            monthlyVoorschot += energieData.getJaarlijksVoorschot();
+//            monthlyGas += energieData.getHuidigeGasprijs();
+//            monthlyStroom += energieData.getHuidigeStroomprijs();
             monthlyVerbruikStroom += energieData.getVerbruikStroom();
             monthlyVerbruikGas += energieData.getVerbruikGas();
             count++;
@@ -170,9 +170,9 @@ class YearlyDataCalculator extends DataCalculator {
         double yearlyVerbruikGas = 0;
 
         for (EnergieData energieData : energieDataLijst) {
-            yearlyVoorschot += energieData.getJaarlijksVoorschot();
-            yearlyGas += energieData.getHuidigeGasprijs();
-            yearlyStroom += energieData.getHuidigeStroomprijs();
+//            yearlyVoorschot += energieData.getJaarlijksVoorschot();
+//            yearlyGas += energieData.getHuidigeGasprijs();
+//            yearlyStroom += energieData.getHuidigeStroomprijs();
             yearlyVerbruikStroom += energieData.getVerbruikStroom();
             yearlyVerbruikGas += energieData.getVerbruikGas();
             count++;
