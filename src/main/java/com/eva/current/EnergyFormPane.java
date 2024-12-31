@@ -71,6 +71,11 @@ public class EnergyFormPane extends GridPane {
                 YearlyDataCalculator yearlyDataCalculator = new YearlyDataCalculator();
                 String averageYear = yearlyDataCalculator.calculateAverage(energieData);
                 outputJaar.setText(averageYear);
+
+                DataCalculator calculator = new DataCalculator();
+                Prijzen prijzen = new Prijzen( 0.23, 0.65);
+                String result = calculator.calculateAveragePrices(energieData, prijzen);
+
 //        }
 //    });
             }

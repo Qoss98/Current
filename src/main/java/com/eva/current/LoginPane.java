@@ -25,6 +25,8 @@ public class LoginPane extends GridPane {
 
     private final Button verzend;
 
+    ArrayList<Prijzen> prijzenLijst = new ArrayList<>();
+
     public LoginPane(SceneManager sceneManager, Constraints constraints) {
         this.verzend = new Button("Verzend");
 
@@ -44,7 +46,7 @@ public class LoginPane extends GridPane {
         Label dataTotStroomL = new Label("Datum tot:");
         Label output = new Label();
 
-        ArrayList<EnergieData> prijzen = new ArrayList<>();
+//        ArrayList<EnergieData> prijzen = new ArrayList<>();
 
         constraints.InputFields3(klantnr, txtKlantnr, vNaam, txtVNaam, aNaam, txtANaam, jVoorschot, txtVoorschot);
         constraints.InputFields1(hgas, txtGas, dataVanafGasL, dataVanafGas, dataTotGasL, dataTotGas);
@@ -66,11 +68,38 @@ public class LoginPane extends GridPane {
 
     private void setOnAction(SceneManager sceneManager) {
         verzend.setOnAction(e -> {
+            
+            handleSubmit();
+
+            // Switch naar de input scene
             EnergyFormPane energyFormPane = new EnergyFormPane(new Constraints());
             Scene inputScene = new Scene(energyFormPane, 800, 600);
 
             sceneManager.addScene("input", inputScene);
             sceneManager.switchTo("input");
         });
+    }
+
+
+
+    private void handleSubmit() {
+        Prijzen prijzen = new Prijzen(
+                Double.parseDouble(txtGas.getText()),
+                Double.parseDouble(txtStroom.getText())
+
+        );
+
+        if(txtGas.getText().isEmpty() || txtStroom.getText().isEmpty()) {
+            System.out.println("Please fill in all fields");
+            return;
+        }
+
+
+        double stroomPrijs = Double.parseDouble(txtStroom.getText());
+        double gasPrijs = Double.parseDouble(txtGas.getText());
+        prijzenLijst.add(prijzen);
+
+
+
     }
 }

@@ -34,7 +34,32 @@ public class DataCalculator {
                 "Gemiddelde Verbruik Stroom: " + avgVerbruikStroom + "\n" +
                 "Gemiddelde Verbruik Gas: " + avgVerbruikGas;
     }
-}
+
+    public String calculateAveragePrices(ArrayList<EnergieData> energieData, Prijzen prijzen) {
+        if ( energieData.isEmpty()) {
+            return "Geen data beschikbaar.";
+        }
+
+
+        double strPrijs = prijzen.getStroomPrijs();
+        double gasPrijs = prijzen.getGasPrijs();
+
+        double totaalStroomVerbruik = 0;
+        double totaalGasVerbruik = 0;
+
+        for (EnergieData energieDatum : energieData) {
+            totaalStroomVerbruik += energieDatum.getVerbruikStroom();
+            totaalGasVerbruik += energieDatum.getVerbruikGas();
+        }
+
+        double kostenStroom = totaalStroomVerbruik * strPrijs;
+        double kostenGas = totaalGasVerbruik * gasPrijs;
+
+        return "Gemiddelde stroomprijs: " + kostenStroom + "\n" +
+                "Gemiddelde gasprijs: " + kostenGas;
+    }
+    }
+
 
 
 class WeeklyDataCalculator extends DataCalculator {
@@ -203,5 +228,29 @@ class YearlyDataCalculator extends DataCalculator {
                     .append("Verbruik Gas: ").append(yearlyVerbruikGas / remainingDays).append("\n\n");
         }
         return yearlyResults.toString();
+    }
+
+    public String calculateAveragePrices(ArrayList<Prijzen> prijzenLijst, ArrayList<EnergieData> energieData) {
+        if (prijzenLijst.isEmpty() || energieData.isEmpty()) {
+            return "Geen data beschikbaar.";
+        }
+
+        Prijzen laatstePrijzen = prijzenLijst.get(prijzenLijst.size() - 1);
+        double strPrijs = laatstePrijzen.getStroomPrijs();
+        double gasPrijs = laatstePrijzen.getGasPrijs();
+
+        double totaalStroomVerbruik = 0;
+        double totaalGasVerbruik = 0;
+
+        for (EnergieData energieDatum : energieData) {
+            totaalStroomVerbruik += energieDatum.getVerbruikStroom();
+            totaalGasVerbruik += energieDatum.getVerbruikGas();
+        }
+
+        double kostenStroom = totaalStroomVerbruik * strPrijs;
+        double kostenGas = totaalGasVerbruik * gasPrijs;
+
+        return "Gemiddelde stroomkosten: " + kostenStroom + "\n" +
+                "Gemiddelde gaskosten: " + kostenGas;
     }
 }
