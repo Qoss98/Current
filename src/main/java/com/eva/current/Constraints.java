@@ -46,8 +46,9 @@ public class Constraints {
         GridPane.setConstraints(dataTotGas, 5, 3);
     }
 
-    void OutputFields(Label outputOpgeslagen, Label outputWeek, Label outputMaand, Label outputJaar) {
+    void OutputFields(Label outputOpgeslagen, Label outputPrijs, Label outputWeek, Label outputMaand, Label outputJaar) {
         GridPane.setConstraints(outputOpgeslagen, 0, 12);
+        GridPane.setConstraints(outputPrijs, 0, 13);
         GridPane.setConstraints(outputWeek, 1, 13);
         GridPane.setConstraints(outputMaand, 2, 13);
         GridPane.setConstraints(outputJaar, 3, 13);

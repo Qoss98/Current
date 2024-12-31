@@ -1,8 +1,13 @@
 package com.eva.current;
 
 public class Prijzen {
-    private final double stroomPrijs;
-    private final double gasPrijs;
+    private double stroomPrijs;
+    private double gasPrijs;
+
+//    public Prijzen() {
+//        this.stroomPrijs = stroomPrijs;
+//        this.gasPrijs = gasPrijs;
+//    }
 
     public Prijzen(double stroomPrijs, double gasPrijs) {
         this.stroomPrijs = stroomPrijs;

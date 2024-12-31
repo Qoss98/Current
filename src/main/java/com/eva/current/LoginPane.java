@@ -68,11 +68,11 @@ public class LoginPane extends GridPane {
 
     private void setOnAction(SceneManager sceneManager) {
         verzend.setOnAction(e -> {
-            
+
             handleSubmit();
 
             // Switch naar de input scene
-            EnergyFormPane energyFormPane = new EnergyFormPane(new Constraints());
+            EnergyFormPane energyFormPane = new EnergyFormPane(new Constraints(), prijzenLijst.get(prijzenLijst.size() - 1));
             Scene inputScene = new Scene(energyFormPane, 800, 600);
 
             sceneManager.addScene("input", inputScene);
@@ -81,25 +81,22 @@ public class LoginPane extends GridPane {
     }
 
 
-
     private void handleSubmit() {
-        Prijzen prijzen = new Prijzen(
-                Double.parseDouble(txtGas.getText()),
-                Double.parseDouble(txtStroom.getText())
+        try {
+            if (txtGas.getText().isEmpty() || txtStroom.getText().isEmpty()) {
+                System.out.println("Please fill in all fields");
+                return;
+            }
 
-        );
+            Prijzen prijzen = new Prijzen(
+                    Double.parseDouble(txtGas.getText()),
+                    Double.parseDouble(txtStroom.getText())
 
-        if(txtGas.getText().isEmpty() || txtStroom.getText().isEmpty()) {
-            System.out.println("Please fill in all fields");
-            return;
+            );
+
+            prijzenLijst.add(prijzen);
+        } catch (NumberFormatException e) {
+            System.out.println("Please enter a valid number");
         }
-
-
-        double stroomPrijs = Double.parseDouble(txtStroom.getText());
-        double gasPrijs = Double.parseDouble(txtGas.getText());
-        prijzenLijst.add(prijzen);
-
-
-
     }
 }

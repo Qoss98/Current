@@ -7,6 +7,8 @@ import java.util.ArrayList;
 
 public class EnergyFormPane extends GridPane {
     // Velden definieren
+    private final Prijzen prijzen; // Store the Prijzen object
+
     private final TextField txtVerbruikStroom = new TextField();
     private final TextField txtVerbruikGas = new TextField();
 
@@ -15,20 +17,20 @@ public class EnergyFormPane extends GridPane {
     private final DatePicker dataTotVerbruik = new DatePicker();
 
     private final Label outputOpgeslagen = new Label();
+    private final Label outputPrijs = new Label();
     private final Label outputWeek = new Label();
     private final Label outputMaand = new Label();
     private final Label outputJaar = new Label();
 
     ArrayList<EnergieData> energieData = new ArrayList<>();
 
-    public EnergyFormPane(Constraints constraints) {
+    public EnergyFormPane(Constraints constraints, Prijzen prijzen) {
+        this.prijzen = prijzen;
         // GridPane setup
         setVgap(10);
         setHgap(10);
 
         // labels creeeren
-
-
         Label verbruikStroom = new Label("Verbruik Stroom in kWh:");
         Label verbruikGas = new Label("Verbruik Gas in m3:");
         Label dataVanafVerbruikL = new Label("Datum vanaf:");
@@ -39,15 +41,14 @@ public class EnergyFormPane extends GridPane {
         Button toonGemiddelde = new Button("Toon Gemiddelde");
 
         // Constraints toevoegen met gebruik van class Constraints
-
         constraints.InputFields2(verbruikStroom, txtVerbruikStroom, verbruikGas, txtVerbruikGas, dataVanafVerbruikL, dataVanafVerbruik, dataTotVerbruikL, dataTotVerbruik);
-        constraints.OutputFields(outputOpgeslagen, outputWeek, outputMaand, outputJaar);
+        constraints.OutputFields(outputOpgeslagen, outputPrijs, outputWeek, outputMaand, outputJaar);
 
         // Alles toevoegen aan de GridPane
         getChildren().addAll(
                 verbruikStroom, txtVerbruikStroom, verbruikGas,
                 txtVerbruikGas, dataVanafVerbruikL, dataVanafVerbruik, dataTotVerbruikL,
-                dataTotVerbruik, verzend, toonGemiddelde, outputOpgeslagen, outputWeek, outputMaand, outputJaar
+                dataTotVerbruik, verzend, toonGemiddelde, outputOpgeslagen, outputPrijs, outputWeek, outputMaand, outputJaar
         );
 
         // Constraints voor alle Buttons
@@ -73,15 +74,9 @@ public class EnergyFormPane extends GridPane {
                 outputJaar.setText(averageYear);
 
                 DataCalculator calculator = new DataCalculator();
-                Prijzen prijzen = new Prijzen( 0.23, 0.65);
                 String result = calculator.calculateAveragePrices(energieData, prijzen);
-
-//        }
-//    });
+                outputPrijs.setText(result);
             }
-
-            // Event handler voor de "Verzend" button
-
         });
     }
 
@@ -95,9 +90,6 @@ public class EnergyFormPane extends GridPane {
 
             // EnergieData object creeeren
             EnergieData data = new EnergieData(
-//                    Double.parseDouble(txtVoorschot.getText()),
-//                    Double.parseDouble(txtGas.getText()),
-//                    Double.parseDouble(txtStroom.getText()),
                     Double.parseDouble(txtVerbruikStroom.getText()),
                     Double.parseDouble(txtVerbruikGas.getText())
             );

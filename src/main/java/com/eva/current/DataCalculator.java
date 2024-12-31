@@ -55,8 +55,8 @@ public class DataCalculator {
         double kostenStroom = totaalStroomVerbruik * strPrijs;
         double kostenGas = totaalGasVerbruik * gasPrijs;
 
-        return "Gemiddelde stroomprijs: " + kostenStroom + "\n" +
-                "Gemiddelde gasprijs: " + kostenGas;
+        return "Gemiddelde stroomprijs €: " + kostenStroom + "\n" +
+                "Gemiddelde gasprijs €: " + kostenGas;
     }
     }
 
@@ -88,9 +88,6 @@ class WeeklyDataCalculator extends DataCalculator {
 
             if (count % 7 == 0) {
                 weeklyResults.append("Week ").append(count / 7).append(" Gemiddeldes:\n")
-                        .append("Voorschot: ").append(weeklyVoorschot / 7).append("\n")
-                        .append("Gasprijs: ").append(weeklyGas / 7).append("\n")
-                        .append("Stroomprijs: ").append(weeklyStroom / 7).append("\n")
                         .append("Verbruik Stroom: ").append(weeklyVerbruikStroom / 7).append("\n")
                         .append("Verbruik Gas: ").append(weeklyVerbruikGas / 7).append("\n\n");
 
@@ -105,9 +102,6 @@ class WeeklyDataCalculator extends DataCalculator {
         if (count % 7 != 0) {
             int remainingDays = count % 7;
             weeklyResults.append("Gedeeltelijke week (").append(remainingDays).append(" dagen) Gemiddeldes:\n")
-                    .append("Voorschot: ").append(weeklyVoorschot / remainingDays).append("\n")
-                    .append("Gasprijs: ").append(weeklyGas / remainingDays).append("\n")
-                    .append("Stroomprijs: ").append(weeklyStroom / remainingDays).append("\n")
                     .append("Verbruik Stroom: ").append(weeklyVerbruikStroom / remainingDays).append("\n")
                     .append("Verbruik Gas: ").append(weeklyVerbruikGas / remainingDays).append("\n");
         }
@@ -133,26 +127,17 @@ class MonthlyDataCalculator extends DataCalculator {
         double monthlyVerbruikGas = 0;
 
         for (EnergieData energieData : energieDataLijst) {
-//            monthlyVoorschot += energieData.getJaarlijksVoorschot();
-//            monthlyGas += energieData.getHuidigeGasprijs();
-//            monthlyStroom += energieData.getHuidigeStroomprijs();
             monthlyVerbruikStroom += energieData.getVerbruikStroom();
             monthlyVerbruikGas += energieData.getVerbruikGas();
             count++;
 
             if (count % 30 == 0) {
                 monthlyResults.append("Maand ").append(count / 30).append(" Gemiddeldes:\n")
-                        .append("Voorschot: ").append(monthlyVoorschot / 30).append("\n")
-                        .append("Gasprijs: ").append(monthlyGas / 30).append("\n")
-                        .append("Stroomprijs: ").append(monthlyStroom / 30).append("\n")
                         .append("Verbruik Stroom: ").append(monthlyVerbruikStroom / 30).append("\n")
                         .append("Verbruik Gas: ").append(monthlyVerbruikGas / 30).append("\n\n");
             }
             else if (count % 31 == 0) {
                 monthlyResults.append("Maand ").append(count / 31).append(" Gemiddeldes:\n")
-                        .append("Voorschot: ").append(monthlyVoorschot / 31).append("\n")
-                        .append("Gasprijs: ").append(monthlyGas / 31).append("\n")
-                        .append("Stroomprijs: ").append(monthlyStroom / 31).append("\n")
                         .append("Verbruik Stroom: ").append(monthlyVerbruikStroom / 31).append("\n")
                         .append("Verbruik Gas: ").append(monthlyVerbruikGas / 31).append("\n\n");
             }
@@ -168,9 +153,6 @@ class MonthlyDataCalculator extends DataCalculator {
             double remainingDaysDouble = count % 30.5;
             int remainingDays = (int) Math.round(remainingDaysDouble);
             monthlyResults.append("Gedeeltelijke maand (").append(remainingDays).append(" dagen) Gemiddeldes:\n")
-                    .append("Voorschot: ").append(monthlyVoorschot / remainingDays).append("\n")
-                    .append("Gasprijs: ").append(monthlyGas / remainingDays).append("\n")
-                    .append("Stroomprijs: ").append(monthlyStroom / remainingDays).append("\n")
                     .append("Verbruik Stroom: ").append(monthlyVerbruikStroom / remainingDays).append("\n")
                     .append("Verbruik Gas: ").append(monthlyVerbruikGas / remainingDays).append("\n");
         }
@@ -204,9 +186,6 @@ class YearlyDataCalculator extends DataCalculator {
 
             if (count % 365 == 0) {
                 yearlyResults.append("Jaar ").append(count / 365).append(" Gemiddeldes:\n")
-                        .append("Voorschot: ").append(yearlyVoorschot / 365).append("\n")
-                        .append("Gasprijs: ").append(yearlyGas / 365).append("\n")
-                        .append("Stroomprijs: ").append(yearlyStroom / 365).append("\n")
                         .append("Verbruik Stroom: ").append(yearlyVerbruikStroom / 365).append("\n")
                         .append("Verbruik Gas: ").append(yearlyVerbruikGas / 365).append("\n\n");
 
@@ -221,9 +200,6 @@ class YearlyDataCalculator extends DataCalculator {
         if (count % 365 != 0) {
             int remainingDays = count % 365;
             yearlyResults.append("Gedeeltelijk jaar (").append(remainingDays).append(" dagen) Gemiddeldes:\n")
-                    .append("Voorschot: ").append(yearlyVoorschot / remainingDays).append("\n")
-                    .append("Gasprijs: ").append(yearlyGas / remainingDays).append("\n")
-                    .append("Stroomprijs: ").append(yearlyStroom / remainingDays).append("\n")
                     .append("Verbruik Stroom: ").append(yearlyVerbruikStroom / remainingDays).append("\n")
                     .append("Verbruik Gas: ").append(yearlyVerbruikGas / remainingDays).append("\n\n");
         }
@@ -250,7 +226,7 @@ class YearlyDataCalculator extends DataCalculator {
         double kostenStroom = totaalStroomVerbruik * strPrijs;
         double kostenGas = totaalGasVerbruik * gasPrijs;
 
-        return "Gemiddelde stroomkosten: " + kostenStroom + "\n" +
-                "Gemiddelde gaskosten: " + kostenGas;
+        return "Gemiddelde stroomkosten: €" + kostenStroom + "\n" +
+                "Gemiddelde gaskosten: €" + kostenGas;
     }
 }
