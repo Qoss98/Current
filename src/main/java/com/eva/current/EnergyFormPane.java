@@ -24,7 +24,10 @@ public class EnergyFormPane extends GridPane {
     private final DatePicker dataVanafVerbruik = new DatePicker();
     private final DatePicker dataTotVerbruik = new DatePicker();
 
-    private final Label output = new Label();
+    private final Label outputOpgeslagen = new Label();
+    private final Label outputWeek = new Label();
+    private final Label outputMaand = new Label();
+    private final Label outputJaar = new Label();
 
     ArrayList<EnergieData> energieData = new ArrayList<>();
 
@@ -66,28 +69,40 @@ public class EnergyFormPane extends GridPane {
                 dataTotGasL, dataTotGas, hstroom, txtStroom, dataVanafStroomL, dataVanafStroom,
                 dataTotStroomL, dataTotStroom, verbruikStroom, txtVerbruikStroom, verbruikGas,
                 txtVerbruikGas, dataVanafVerbruikL, dataVanafVerbruik, dataTotVerbruikL,
-                dataTotVerbruik, verzend, toonGemiddelde, output
+                dataTotVerbruik, verzend, toonGemiddelde, outputOpgeslagen, outputWeek, outputMaand, outputJaar
         );
 
         // Set constraints for the submit button and output label
         GridPane.setConstraints(verzend, 0, 10);
         GridPane.setConstraints(toonGemiddelde, 0, 11);
-        GridPane.setConstraints(output, 0, 12);
+        GridPane.setConstraints(outputOpgeslagen, 0, 12);
+        GridPane.setConstraints(outputWeek, 1, 13);
+        GridPane.setConstraints(outputMaand, 2, 13);
+        GridPane.setConstraints(outputJaar, 3, 13);
 
         // Set up the button action
         verzend.setOnAction(e -> handleSubmit());
         DataCalculator dataCalculator = new DataCalculator();
         toonGemiddelde.setOnAction(e -> {
         if (energieData.isEmpty()){
-            output.setText("Er zijn nog geen gegevens ingevoerd");
+            outputOpgeslagen.setText("Er zijn nog geen gegevens ingevoerd");
         }else{
 //            DataCalculator.calculateAverage(energieData);
 //            String average = DataCalculator.calculateAverage(energieData);
 //            output.setText(average);
 //
 //            DataCalculator.calculateAverageWeekly(energieData);
-           String average = WeeklyDataCalculator.calculateAverage(energieData);
-            output.setText(average);
+            WeeklyDataCalculator weeklyDataCalculator = new WeeklyDataCalculator();
+            String averageWeek = weeklyDataCalculator.calculateAverage(energieData);
+            outputWeek.setText(averageWeek);
+
+            MonthlyDataCalculator monthlyDataCalculator = new MonthlyDataCalculator();
+            String averageMonth = monthlyDataCalculator.calculateAverage(energieData);
+            outputMaand.setText(averageMonth);
+
+            YearlyDataCalculator yearlyDataCalculator = new YearlyDataCalculator();
+            String averageYear = yearlyDataCalculator.calculateAverage(energieData);
+            outputJaar.setText(averageYear);
         }
     });
     }
@@ -97,7 +112,7 @@ public class EnergyFormPane extends GridPane {
         try {
             // Validate inputs
             if (txtVoorschot.getText().isEmpty() || txtGas.getText().isEmpty() || txtStroom.getText().isEmpty()) {
-                output.setText("Vul alle velden in");
+                outputOpgeslagen.setText("Vul alle velden in");
                 return;
             }
 
@@ -111,13 +126,13 @@ public class EnergyFormPane extends GridPane {
             );
 
             energieData.add(data);
-            output.setText("Data opgeslagen. Totaal aantal: " + energieData.size());
+            outputOpgeslagen.setText("Data opgeslagen. Totaal aantal: " + energieData.size());
 
 
             // Print data to the output label
 //            data.printData(output);
         } catch (NumberFormatException ex) {
-            output.setText("Vul geldige getallen in");
+            outputOpgeslagen.setText("Vul geldige getallen in");
         }
     }
 }
