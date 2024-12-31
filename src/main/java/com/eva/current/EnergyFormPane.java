@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public class EnergyFormPane extends GridPane {
 
-    // Define the components as fields
+    // Velden definieren
     private final TextField txtKlantnr = new TextField();
     private final TextField txtVNaam = new TextField();
     private final TextField txtANaam = new TextField();
@@ -32,11 +32,11 @@ public class EnergyFormPane extends GridPane {
     ArrayList<EnergieData> energieData = new ArrayList<>();
 
     public EnergyFormPane(Constraints constraints) {
-        // Set up the GridPane
+        // GridPane setup
         setVgap(10);
         setHgap(10);
 
-        // Create labels
+        // labels creeeren
         Label klantnr = new Label("Klantnummer:");
         Label vNaam = new Label("Voornaam:");
         Label aNaam = new Label("Achternaam:");
@@ -56,13 +56,14 @@ public class EnergyFormPane extends GridPane {
         Button verzend = new Button("Verzend");
         Button toonGemiddelde = new Button("Toon Gemiddelde");
 
-        // Apply constraints using the Constraints class
+        // Constraints toevoegen met gebruik van class Constraints
         constraints.InputFields3(klantnr, txtKlantnr, vNaam, txtVNaam, aNaam, txtANaam, jVoorschot, txtVoorschot);
         constraints.InputFields1(hgas, txtGas, dataVanafGasL, dataVanafGas, dataTotGasL, dataTotGas);
         constraints.InputFields4(hstroom, txtStroom, dataVanafStroomL, dataVanafStroom, dataTotStroomL, dataTotStroom);
         constraints.InputFields2(verbruikStroom, txtVerbruikStroom, verbruikGas, txtVerbruikGas, dataVanafVerbruikL, dataVanafVerbruik, dataTotVerbruikL, dataTotVerbruik);
+        constraints.OutputFields(outputOpgeslagen, outputWeek, outputMaand, outputJaar);
 
-        // Add all components to the grid
+        // Alles toevoegen aan de GridPane
         getChildren().addAll(
                 klantnr, txtKlantnr, vNaam, txtVNaam, aNaam, txtANaam,
                 jVoorschot, txtVoorschot, hgas, txtGas, dataVanafGasL, dataVanafGas,
@@ -72,26 +73,16 @@ public class EnergyFormPane extends GridPane {
                 dataTotVerbruik, verzend, toonGemiddelde, outputOpgeslagen, outputWeek, outputMaand, outputJaar
         );
 
-        // Set constraints for the submit button and output label
+        // Constraints voor alle Buttons
         GridPane.setConstraints(verzend, 0, 10);
         GridPane.setConstraints(toonGemiddelde, 0, 11);
-        GridPane.setConstraints(outputOpgeslagen, 0, 12);
-        GridPane.setConstraints(outputWeek, 1, 13);
-        GridPane.setConstraints(outputMaand, 2, 13);
-        GridPane.setConstraints(outputJaar, 3, 13);
 
-        // Set up the button action
+        // setonAction logica voor de buttons
         verzend.setOnAction(e -> handleSubmit());
-        DataCalculator dataCalculator = new DataCalculator();
         toonGemiddelde.setOnAction(e -> {
         if (energieData.isEmpty()){
             outputOpgeslagen.setText("Er zijn nog geen gegevens ingevoerd");
         }else{
-//            DataCalculator.calculateAverage(energieData);
-//            String average = DataCalculator.calculateAverage(energieData);
-//            output.setText(average);
-//
-//            DataCalculator.calculateAverageWeekly(energieData);
             WeeklyDataCalculator weeklyDataCalculator = new WeeklyDataCalculator();
             String averageWeek = weeklyDataCalculator.calculateAverage(energieData);
             outputWeek.setText(averageWeek);
@@ -107,7 +98,7 @@ public class EnergyFormPane extends GridPane {
     });
     }
 
-    // Event handler for the "Verzend" button
+    // Event handler voor de "Verzend" button
     private void handleSubmit() {
         try {
             // Validate inputs
@@ -116,7 +107,7 @@ public class EnergyFormPane extends GridPane {
                 return;
             }
 
-            // Create EnergieData object
+            // EnergieData object creeeren
             EnergieData data = new EnergieData(
                     Double.parseDouble(txtVoorschot.getText()),
                     Double.parseDouble(txtGas.getText()),
@@ -127,11 +118,9 @@ public class EnergyFormPane extends GridPane {
 
             energieData.add(data);
             outputOpgeslagen.setText("Data opgeslagen. Totaal aantal: " + energieData.size());
-
-
-            // Print data to the output label
-//            data.printData(output);
-        } catch (NumberFormatException ex) {
+        }
+        // Catch met foutmelding
+         catch (NumberFormatException ex) {
             outputOpgeslagen.setText("Vul geldige getallen in");
         }
     }

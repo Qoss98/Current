@@ -13,7 +13,7 @@ public class DataCalculator {
 
     public String calculateAverage(ArrayList<EnergieData> energieDataLijst) {
         int count = energieDataLijst.size();
-        
+
         for (EnergieData energieData : energieDataLijst) {
             totalVoorschot = energieData.getJaarlijksVoorschot();
             totalGas += energieData.getHuidigeGasprijs();
