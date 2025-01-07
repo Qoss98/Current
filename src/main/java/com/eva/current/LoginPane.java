@@ -25,7 +25,8 @@ public class LoginPane extends GridPane {
 
     private final Button verzend;
 
-    ArrayList<Prijzen> prijzenLijst = new ArrayList<>();
+//    ArrayList<Prijzen> prijzenLijst = new ArrayList<>();
+    private Prijzen prijzen;
 
     public LoginPane(SceneManager sceneManager, Constraints constraints) {
         this.verzend = new Button("Verzend");
@@ -71,7 +72,13 @@ public class LoginPane extends GridPane {
             handleSubmit();
 
             // Pass the last entered Prijzen to EnergyFormPane
-            EnergyFormPane energyFormPane = new EnergyFormPane(new Constraints(), prijzenLijst.get(prijzenLijst.size() - 1));
+
+            prijzen = new Prijzen(
+                    Double.parseDouble(txtGas.getText()),
+                    Double.parseDouble(txtStroom.getText())
+            );
+
+            EnergyFormPane energyFormPane = new EnergyFormPane(new Constraints(), prijzen);
             Scene inputScene = new Scene(energyFormPane, 800, 600);
 
             sceneManager.addScene("input", inputScene);
@@ -94,7 +101,7 @@ public class LoginPane extends GridPane {
 
             );
 
-            prijzenLijst.add(prijzen);
+//            prijzenLijst.add(prijzen);
         } catch (NumberFormatException e) {
             System.out.println("Please enter a valid number");
         }
