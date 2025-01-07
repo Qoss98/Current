@@ -68,10 +68,9 @@ public class LoginPane extends GridPane {
 
     private void setOnAction(SceneManager sceneManager) {
         verzend.setOnAction(e -> {
-
             handleSubmit();
 
-            // Switch naar de input scene
+            // Pass the last entered Prijzen to EnergyFormPane
             EnergyFormPane energyFormPane = new EnergyFormPane(new Constraints(), prijzenLijst.get(prijzenLijst.size() - 1));
             Scene inputScene = new Scene(energyFormPane, 800, 600);
 
@@ -79,6 +78,7 @@ public class LoginPane extends GridPane {
             sceneManager.switchTo("input");
         });
     }
+
 
 
     private void handleSubmit() {

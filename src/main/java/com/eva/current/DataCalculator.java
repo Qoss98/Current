@@ -55,6 +55,8 @@ public class DataCalculator {
         double kostenStroom = totaalStroomVerbruik * strPrijs;
         double kostenGas = totaalGasVerbruik * gasPrijs;
 
+
+
         return "Gemiddelde stroomprijs €: " + kostenStroom + "\n" +
                 "Gemiddelde gasprijs €: " + kostenGas;
     }
@@ -63,6 +65,12 @@ public class DataCalculator {
 
 
 class WeeklyDataCalculator extends DataCalculator {
+    private final Prijzen prijzen; // Prijzen object to calculate prices
+
+    public WeeklyDataCalculator(Prijzen prijzen) {
+        this.prijzen = prijzen;
+    }
+
     @Override
     public String calculateAverage(ArrayList<EnergieData> energieDataLijst) {
         if (energieDataLijst.isEmpty()) {
@@ -72,45 +80,54 @@ class WeeklyDataCalculator extends DataCalculator {
         StringBuilder weeklyResults = new StringBuilder();
         int count = 0;
 
-        double weeklyVoorschot = 0;
-        double weeklyGas = 0;
-        double weeklyStroom = 0;
         double weeklyVerbruikStroom = 0;
         double weeklyVerbruikGas = 0;
 
         for (EnergieData energieData : energieDataLijst) {
-//            weeklyVoorschot += energieData.getJaarlijksVoorschot();
-//            weeklyGas += energieData.getHuidigeGasprijs();
-//            weeklyStroom += energieData.getHuidigeStroomprijs();
             weeklyVerbruikStroom += energieData.getVerbruikStroom();
             weeklyVerbruikGas += energieData.getVerbruikGas();
             count++;
 
+            // Process data for every full week
             if (count % 7 == 0) {
+                ArrayList<EnergieData> currentWeekData = new ArrayList<>(energieDataLijst.subList(count - 7, count));
+                String weeklyPrices = calculateAveragePrices(currentWeekData, prijzen);
+
                 weeklyResults.append("Week ").append(count / 7).append(" Gemiddeldes:\n")
                         .append("Verbruik Stroom: ").append(weeklyVerbruikStroom / 7).append("\n")
-                        .append("Verbruik Gas: ").append(weeklyVerbruikGas / 7).append("\n\n");
+                        .append("Verbruik Gas: ").append(weeklyVerbruikGas / 7).append("\n")
+                        .append(weeklyPrices).append("\n\n");
 
-                weeklyVoorschot = 0;
-                weeklyGas = 0;
-                weeklyStroom = 0;
+                // Reset weekly totals
                 weeklyVerbruikStroom = 0;
                 weeklyVerbruikGas = 0;
             }
         }
 
-        if (count % 7 != 0) {
-            int remainingDays = count % 7;
+        // Handle remaining data (partial week)
+        int remainingDays = count % 7;
+        if (remainingDays != 0) {
+            ArrayList<EnergieData> remainingWeekData = new ArrayList<>(energieDataLijst.subList(count - remainingDays, count));
+            String weeklyPrices = calculateAveragePrices(remainingWeekData, prijzen);
+
             weeklyResults.append("Gedeeltelijke week (").append(remainingDays).append(" dagen) Gemiddeldes:\n")
                     .append("Verbruik Stroom: ").append(weeklyVerbruikStroom / remainingDays).append("\n")
-                    .append("Verbruik Gas: ").append(weeklyVerbruikGas / remainingDays).append("\n");
+                    .append("Verbruik Gas: ").append(weeklyVerbruikGas / remainingDays).append("\n")
+                    .append(weeklyPrices).append("\n");
         }
 
         return weeklyResults.toString();
     }
 }
 
+
 class MonthlyDataCalculator extends DataCalculator {
+    private final Prijzen prijzen; // Prijzen object to calculate prices
+
+    public MonthlyDataCalculator(Prijzen prijzen) {
+        this.prijzen = prijzen;
+    }
+
     @Override
     public String calculateAverage(ArrayList<EnergieData> energieDataLijst) {
         if (energieDataLijst.isEmpty()) {
@@ -120,9 +137,6 @@ class MonthlyDataCalculator extends DataCalculator {
         StringBuilder monthlyResults = new StringBuilder();
         int count = 0;
 
-        double monthlyVoorschot = 0;
-        double monthlyGas = 0;
-        double monthlyStroom = 0;
         double monthlyVerbruikStroom = 0;
         double monthlyVerbruikGas = 0;
 
@@ -131,34 +145,38 @@ class MonthlyDataCalculator extends DataCalculator {
             monthlyVerbruikGas += energieData.getVerbruikGas();
             count++;
 
-            if (count % 30 == 0) {
-                monthlyResults.append("Maand ").append(count / 30).append(" Gemiddeldes:\n")
-                        .append("Verbruik Stroom: ").append(monthlyVerbruikStroom / 30).append("\n")
-                        .append("Verbruik Gas: ").append(monthlyVerbruikGas / 30).append("\n\n");
-            }
-            else if (count % 31 == 0) {
-                monthlyResults.append("Maand ").append(count / 31).append(" Gemiddeldes:\n")
-                        .append("Verbruik Stroom: ").append(monthlyVerbruikStroom / 31).append("\n")
-                        .append("Verbruik Gas: ").append(monthlyVerbruikGas / 31).append("\n\n");
-            }
+            // Process every 4 weeks as 1 month
+            if (count % 4 == 0) {
+                ArrayList<EnergieData> currentMonthData = new ArrayList<>(energieDataLijst.subList(count - 4, count));
+                String monthlyPrices = calculateAveragePrices(currentMonthData, prijzen);
 
-            monthlyVoorschot = 0;
-            monthlyGas = 0;
-            monthlyStroom = 0;
-            monthlyVerbruikStroom = 0;
-            monthlyVerbruikGas = 0;
+                monthlyResults.append("Maand ").append(count / 4).append(" Gemiddeldes:\n")
+                        .append("Verbruik Stroom: ").append(monthlyVerbruikStroom / 4).append("\n")
+                        .append("Verbruik Gas: ").append(monthlyVerbruikGas / 4).append("\n")
+                        .append(monthlyPrices).append("\n\n");
+
+                // Reset monthly totals
+                monthlyVerbruikStroom = 0;
+                monthlyVerbruikGas = 0;
+            }
         }
 
-        if (count % 30 != 0) {
-            double remainingDaysDouble = count % 30.5;
-            int remainingDays = (int) Math.round(remainingDaysDouble);
-            monthlyResults.append("Gedeeltelijke maand (").append(remainingDays).append(" dagen) Gemiddeldes:\n")
-                    .append("Verbruik Stroom: ").append(monthlyVerbruikStroom / remainingDays).append("\n")
-                    .append("Verbruik Gas: ").append(monthlyVerbruikGas / remainingDays).append("\n");
+        // Handle remaining data (partial month)
+        int remainingWeeks = count % 4;
+        if (remainingWeeks != 0) {
+            ArrayList<EnergieData> remainingMonthData = new ArrayList<>(energieDataLijst.subList(count - remainingWeeks, count));
+            String monthlyPrices = calculateAveragePrices(remainingMonthData, prijzen);
+
+            monthlyResults.append("Gedeeltelijke maand (").append(remainingWeeks).append(" weken) Gemiddeldes:\n")
+                    .append("Verbruik Stroom: ").append(monthlyVerbruikStroom / remainingWeeks).append("\n")
+                    .append("Verbruik Gas: ").append(monthlyVerbruikGas / remainingWeeks).append("\n")
+                    .append(monthlyPrices).append("\n");
         }
+
         return monthlyResults.toString();
     }
 }
+
 
 class YearlyDataCalculator extends DataCalculator {
     @Override

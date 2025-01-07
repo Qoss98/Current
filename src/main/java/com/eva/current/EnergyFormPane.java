@@ -61,21 +61,23 @@ public class EnergyFormPane extends GridPane {
             if (energieData.isEmpty()) {
                 outputOpgeslagen.setText("Er zijn nog geen gegevens ingevoerd");
             } else {
-                WeeklyDataCalculator weeklyDataCalculator = new WeeklyDataCalculator();
-                String averageWeek = weeklyDataCalculator.calculateAverage(energieData);
-                outputWeek.setText(averageWeek);
+                DataCalculator calculator = new DataCalculator();
+                String result = calculator.calculateAveragePrices(energieData, prijzen);
+                outputPrijs.setText(result);
 
-                MonthlyDataCalculator monthlyDataCalculator = new MonthlyDataCalculator();
+//                WeeklyDataCalculator weeklyDataCalculator = new WeeklyDataCalculator(prijzen);
+//                String averageWeek = weeklyDataCalculator.calculateAverage(energieData);
+//                outputWeek.setText(averageWeek);
+
+                MonthlyDataCalculator monthlyDataCalculator = new MonthlyDataCalculator(prijzen);
                 String averageMonth = monthlyDataCalculator.calculateAverage(energieData);
-                outputMaand.setText(averageMonth);
+                outputMaand.setText(averageMonth + result);
 
                 YearlyDataCalculator yearlyDataCalculator = new YearlyDataCalculator();
                 String averageYear = yearlyDataCalculator.calculateAverage(energieData);
                 outputJaar.setText(averageYear);
 
-                DataCalculator calculator = new DataCalculator();
-                String result = calculator.calculateAveragePrices(energieData, prijzen);
-                outputPrijs.setText(result);
+
             }
         });
     }
