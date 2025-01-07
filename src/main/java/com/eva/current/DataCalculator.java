@@ -179,6 +179,12 @@ class MonthlyDataCalculator extends DataCalculator {
 
 
 class YearlyDataCalculator extends DataCalculator {
+    private final Prijzen prijzen; // Prijzen object to calculate prices
+
+    public YearlyDataCalculator(Prijzen prijzen) {
+        this.prijzen = prijzen;
+    }
+
     @Override
     public String calculateAverage(ArrayList<EnergieData> energieDataLijst) {
         if (energieDataLijst.isEmpty()) {
@@ -202,10 +208,13 @@ class YearlyDataCalculator extends DataCalculator {
             yearlyVerbruikGas += energieData.getVerbruikGas();
             count++;
 
-            if (count % 365 == 0) {
-                yearlyResults.append("Jaar ").append(count / 365).append(" Gemiddeldes:\n")
-                        .append("Verbruik Stroom: ").append(yearlyVerbruikStroom / 365).append("\n")
-                        .append("Verbruik Gas: ").append(yearlyVerbruikGas / 365).append("\n\n");
+            if (count % 52 == 0) {
+                ArrayList<EnergieData> currentYearData = new ArrayList<>(energieDataLijst.subList(count - 12, count));
+                String yearlyPrices = calculateAveragePrices(currentYearData, prijzen);
+                yearlyResults.append("Jaar ").append(count / 52).append(" Gemiddeldes:\n")
+                        .append("Verbruik Stroom: ").append(yearlyVerbruikStroom / 52).append("\n")
+                        .append("Verbruik Gas: ").append(yearlyVerbruikGas / 52).append("\n\n")
+                        .append(yearlyPrices).append("\n\n");
 
                 yearlyVoorschot = 0;
                 yearlyGas = 0;
@@ -215,12 +224,12 @@ class YearlyDataCalculator extends DataCalculator {
             }
         }
 
-        if (count % 365 != 0) {
-            int remainingDays = count % 365;
-            yearlyResults.append("Gedeeltelijk jaar (").append(remainingDays).append(" dagen) Gemiddeldes:\n")
-                    .append("Verbruik Stroom: ").append(yearlyVerbruikStroom / remainingDays).append("\n")
-                    .append("Verbruik Gas: ").append(yearlyVerbruikGas / remainingDays).append("\n\n");
-        }
+//        if (count % 365 != 0) {
+//            int remainingDays = count % 365;
+//            yearlyResults.append("Gedeeltelijk jaar (").append(remainingDays).append(" dagen) Gemiddeldes:\n")
+//                    .append("Verbruik Stroom: ").append(yearlyVerbruikStroom / remainingDays).append("\n")
+//                    .append("Verbruik Gas: ").append(yearlyVerbruikGas / remainingDays).append("\n\n");
+//        }
         return yearlyResults.toString();
     }
 

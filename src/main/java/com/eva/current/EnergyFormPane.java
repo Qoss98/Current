@@ -73,7 +73,7 @@ public class EnergyFormPane extends GridPane {
                 String averageMonth = monthlyDataCalculator.calculateAverage(energieData);
                 outputMaand.setText(averageMonth + result);
 
-                YearlyDataCalculator yearlyDataCalculator = new YearlyDataCalculator();
+                YearlyDataCalculator yearlyDataCalculator = new YearlyDataCalculator(prijzen);
                 String averageYear = yearlyDataCalculator.calculateAverage(energieData);
                 outputJaar.setText(averageYear);
 
