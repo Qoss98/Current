@@ -3,8 +3,7 @@ package com.eva.current;
 import javafx.scene.control.Label;
 
 public class EnergieData {
-
-
+    
     private final double verbruikStroom;
     private final double verbruikGas;
 
@@ -21,7 +20,6 @@ public class EnergieData {
     public double getVerbruikGas() {
         return verbruikGas;
     }
-
 
 }
 
