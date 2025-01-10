@@ -64,6 +64,8 @@ public class DataCalculator {
 
         double totaleKosten = kostenStroom + kostenGas;
 
+        System.out.println(voorschot);
+
         if (voorschot < totaleKosten) {
             return "U heeft te weinig voorschot betaald. Voorschot: " + voorschot + " Uw totale kosten zijn: €" + totaleKosten;
         } else if (voorschot <= totaleKosten) {
@@ -228,11 +230,11 @@ class YearlyDataCalculator extends DataCalculator {
             count++;
 
             if (count % 52 == 0) {
-                ArrayList<EnergieData> currentYearData = new ArrayList<>(energieDataLijst.subList(count - 52, count));
+                ArrayList<EnergieData> currentYearData = new ArrayList<>(energieDataLijst.subList(count - 12, count));
                 String yearlyPrices = calculateAveragePrices(currentYearData, prijzen);
                 yearlyResults.append("Jaar ").append(count / 52).append(" Gemiddeldes:\n")
-                        .append("Verbruik Stroom: ").append(yearlyVerbruikStroom).append("\n")
-                        .append("Verbruik Gas: ").append(yearlyVerbruikGas).append("\n\n")
+                        .append("Verbruik Stroom: ").append(yearlyVerbruikStroom / 52).append("\n")
+                        .append("Verbruik Gas: ").append(yearlyVerbruikGas / 52).append("\n\n")
                         .append(yearlyPrices).append("\n\n");
 
                 yearlyVerbruikStroom = 0;
@@ -240,12 +242,12 @@ class YearlyDataCalculator extends DataCalculator {
             }
         }
 
-        if (count % 365 != 0) {
-            int remainingDays = count % 365;
-            yearlyResults.append("Gedeeltelijk jaar (").append(remainingDays).append(" dagen) Gemiddeldes:\n")
-                    .append("Verbruik Stroom: ").append(yearlyVerbruikStroom / remainingDays).append("\n")
-                    .append("Verbruik Gas: ").append(yearlyVerbruikGas / remainingDays).append("\n\n");
-        }
+//        if (count % 365 != 0) {
+//            int remainingDays = count % 365;
+//            yearlyResults.append("Gedeeltelijk jaar (").append(remainingDays).append(" dagen) Gemiddeldes:\n")
+//                    .append("Verbruik Stroom: ").append(yearlyVerbruikStroom / remainingDays).append("\n")
+//                    .append("Verbruik Gas: ").append(yearlyVerbruikGas / remainingDays).append("\n\n");
+//        }
         return yearlyResults.toString();
     }
 
