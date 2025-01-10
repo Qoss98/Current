@@ -75,7 +75,8 @@ public class LoginPane extends GridPane {
 
             prijzen = new Prijzen(
                     Double.parseDouble(txtGas.getText()),
-                    Double.parseDouble(txtStroom.getText())
+                    Double.parseDouble(txtStroom.getText()),
+                    Double.parseDouble(txtVoorschot.getText())
             );
 
             EnergyFormPane energyFormPane = new EnergyFormPane(new Constraints(), prijzen);
@@ -97,7 +98,8 @@ public class LoginPane extends GridPane {
 
             Prijzen prijzen = new Prijzen(
                     Double.parseDouble(txtGas.getText()),
-                    Double.parseDouble(txtStroom.getText())
+                    Double.parseDouble(txtStroom.getText()),
+                    Double.parseDouble(txtVoorschot.getText())
 
             );
 
