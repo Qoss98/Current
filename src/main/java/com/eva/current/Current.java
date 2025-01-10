@@ -23,7 +23,6 @@ public class Current extends Application {
         Scene loginScene = new Scene(loginPane, 1500, 800);
         sceneManager.addScene("login", loginScene);
 
-
         // Switch to the login scene
         sceneManager.switchTo("login");
 

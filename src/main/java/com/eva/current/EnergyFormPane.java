@@ -61,7 +61,7 @@ public class EnergyFormPane extends GridPane {
             if (energieData.isEmpty()) {
                 outputOpgeslagen.setText("Er zijn nog geen gegevens ingevoerd");
             } else {
-                DataCalculator calculator = new DataCalculator(prijzen);
+                DataCalculator calculator = new DataCalculator();
                 String result = calculator.calculateAveragePrices(energieData, prijzen);
                 outputPrijs.setText(result);
 
@@ -71,13 +71,11 @@ public class EnergyFormPane extends GridPane {
 
                 MonthlyDataCalculator monthlyDataCalculator = new MonthlyDataCalculator(prijzen);
                 String averageMonth = monthlyDataCalculator.calculateAverage(energieData);
-                outputMaand.setText(averageMonth);
+                outputMaand.setText(averageMonth + result);
 
                 YearlyDataCalculator yearlyDataCalculator = new YearlyDataCalculator(prijzen);
                 String averageYear = yearlyDataCalculator.calculateAverage(energieData);
                 outputJaar.setText(averageYear);
-
-
 
 
             }

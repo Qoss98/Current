@@ -7,6 +7,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 
+import java.util.ArrayList;
 
 public class LoginPane extends GridPane {
 
@@ -22,18 +23,6 @@ public class LoginPane extends GridPane {
     private final DatePicker dataVanafStroom = new DatePicker();
     private final DatePicker dataTotStroom = new DatePicker();
 
-    private final Label output = new Label();
-    private final Label klantnr = new Label("Klantnummer:");
-    private final Label vNaam = new Label("Voornaam:");
-    private final Label aNaam = new Label("Achternaam:");
-    private final Label jVoorschot = new Label("Jaarlijks Voorschot:");
-    private final Label hgas = new Label("Huidige Gasprijs:");
-    private final Label dataVanafGasL = new Label("Datum vanaf:");
-    private final Label dataTotGasL = new Label("Datum tot:");
-    private final Label hstroom = new Label("Huidige Stroomprijs in kWh:");
-    private final Label dataVanafStroomL = new Label("Datum vanaf:");
-    private final Label dataTotStroomL = new Label("Datum tot:");
-
     private final Button verzend;
 
 //    ArrayList<Prijzen> prijzenLijst = new ArrayList<>();
@@ -46,14 +35,24 @@ public class LoginPane extends GridPane {
         setVgap(10);
         setHgap(10);
 
+        Label klantnr = new Label("Klantnummer:");
+        Label vNaam = new Label("Voornaam:");
+        Label aNaam = new Label("Achternaam:");
+        Label jVoorschot = new Label("Jaarlijks Voorschot:");
+        Label hgas = new Label("Huidige Gasprijs:");
+        Label dataVanafGasL = new Label("Datum vanaf:");
+        Label dataTotGasL = new Label("Datum tot:");
+        Label hstroom = new Label("Huidige Stroomprijs in kWh:");
+        Label dataVanafStroomL = new Label("Datum vanaf:");
+        Label dataTotStroomL = new Label("Datum tot:");
+        Label output = new Label();
+
 //        ArrayList<EnergieData> prijzen = new ArrayList<>();
 
-        // Constraints toevoegen met gebruik van class Constraints
         constraints.InputFields3(klantnr, txtKlantnr, vNaam, txtVNaam, aNaam, txtANaam, jVoorschot, txtVoorschot);
         constraints.InputFields1(hgas, txtGas, dataVanafGasL, dataVanafGas, dataTotGasL, dataTotGas);
         constraints.InputFields4(hstroom, txtStroom, dataVanafStroomL, dataVanafStroom, dataTotStroomL, dataTotStroom);
 
-        // Alles toevoegen aan de GridPane
         getChildren().addAll(
                 klantnr, txtKlantnr, vNaam, txtVNaam, aNaam, txtANaam,
                 jVoorschot, txtVoorschot, hgas, txtGas, dataVanafGasL, dataVanafGas,
@@ -61,11 +60,10 @@ public class LoginPane extends GridPane {
                 dataTotStroomL, dataTotStroom, verzend, output
         );
 
-        // Constraints handmatig voor de "verzend" button, want makkelijker
-        GridPane.setConstraints(verzend, 0, 11);
+        GridPane.setConstraints(verzend, 0, 12);
         GridPane.setConstraints(output, 0, 13);
 
-        // Set action voor de "verzend" button
+        // Set action for the "verzend" button
         setOnAction(sceneManager);
     }
 
@@ -73,14 +71,13 @@ public class LoginPane extends GridPane {
         verzend.setOnAction(e -> {
             handleSubmit();
 
-            //Parse text naar double en initieer prijzen object
+            // Pass the last entered Prijzen to EnergyFormPane
+
             prijzen = new Prijzen(
                     Double.parseDouble(txtGas.getText()),
-                    Double.parseDouble(txtStroom.getText()),
-                    Double.parseDouble(txtVoorschot.getText())
+                    Double.parseDouble(txtStroom.getText())
             );
 
-            // Creeer een nieuwe EnergyFormPane en switch naar de input scene
             EnergyFormPane energyFormPane = new EnergyFormPane(new Constraints(), prijzen);
             Scene inputScene = new Scene(energyFormPane, 800, 600);
 
@@ -94,20 +91,19 @@ public class LoginPane extends GridPane {
     private void handleSubmit() {
         try {
             if (txtGas.getText().isEmpty() || txtStroom.getText().isEmpty()) {
-                output.setText("Vul alle velden in!");
+                System.out.println("Please fill in all fields");
                 return;
             }
 
             Prijzen prijzen = new Prijzen(
                     Double.parseDouble(txtGas.getText()),
-                    Double.parseDouble(txtStroom.getText()),
-                    Double.parseDouble(txtVoorschot.getText())
+                    Double.parseDouble(txtStroom.getText())
 
             );
 
 //            prijzenLijst.add(prijzen);
         } catch (NumberFormatException e) {
-            output.setText("Alleen geldige nummers a.u.b.");
+            System.out.println("Please enter a valid number");
         }
     }
 }

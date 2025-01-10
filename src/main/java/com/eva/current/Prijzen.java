@@ -3,10 +3,13 @@ package com.eva.current;
 public class Prijzen {
     private double stroomPrijs;
     private double gasPrijs;
-    double voorschot;
 
-    public Prijzen(double stroomPrijs, double gasPrijs, double voorschot) {
-        this.voorschot = voorschot;
+//    public Prijzen() {
+//        this.stroomPrijs = stroomPrijs;
+//        this.gasPrijs = gasPrijs;
+//    }
+
+    public Prijzen(double stroomPrijs, double gasPrijs) {
         this.stroomPrijs = stroomPrijs;
         this.gasPrijs = gasPrijs;
     }
@@ -17,9 +20,5 @@ public class Prijzen {
 
     public double getGasPrijs() {
         return gasPrijs;
-    }
-
-    public double getVoorschot() {
-        return voorschot;
     }
 }
