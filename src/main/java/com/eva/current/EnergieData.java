@@ -3,12 +3,7 @@ package com.eva.current;
 import javafx.scene.control.Label;
 
 public class EnergieData {
-<<<<<<< HEAD
-
-
-=======
     
->>>>>>> parent of 350ad17 (Now really finished work)
     private final double verbruikStroom;
     private final double verbruikGas;
 

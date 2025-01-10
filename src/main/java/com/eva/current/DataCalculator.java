@@ -60,6 +60,8 @@ public class DataCalculator {
 =======
         System.out.println(voorschot);
 
+        System.out.println(voorschot);
+
         if (voorschot < totaleKosten) {
             return "U heeft te weinig voorschot betaald. Voorschot: " + voorschot + " Uw totale kosten zijn: €" + totaleKosten;
         } else if (voorschot <= totaleKosten) {
