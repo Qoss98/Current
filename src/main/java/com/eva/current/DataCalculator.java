@@ -56,6 +56,17 @@ public class DataCalculator {
         double kostenGas = totaalGasVerbruik * gasPrijs;
 
 
+<<<<<<< HEAD
+=======
+        System.out.println(voorschot);
+
+        if (voorschot < totaleKosten) {
+            return "U heeft te weinig voorschot betaald. Voorschot: " + voorschot + " Uw totale kosten zijn: €" + totaleKosten;
+        } else if (voorschot <= totaleKosten) {
+            return "Uw voorschot is gelijk aan uw totale kosten. Uw totale kosten zijn: €" + totaleKosten + "\n" +
+                    "Uw voorschot is: €" + voorschot;
+        }
+>>>>>>> parent of 350ad17 (Now really finished work)
 
         return "Gemiddelde stroomprijs €: " + kostenStroom + "\n" +
                 "Gemiddelde gasprijs €: " + kostenGas;
