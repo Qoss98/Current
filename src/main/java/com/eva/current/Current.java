@@ -16,6 +16,7 @@ public class Current extends Application {
         // Create Constraints
         Constraints constraints = new Constraints();
 
+
         // Initialize LoginPane with SceneManager and Constraints
         LoginPane loginPane = new LoginPane(sceneManager, constraints);
 

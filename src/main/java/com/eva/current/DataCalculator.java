@@ -1,5 +1,9 @@
 package com.eva.current;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class DataCalculator {
@@ -41,7 +45,7 @@ public class DataCalculator {
     }
 
     public String calculateAveragePrices(ArrayList<EnergieData> energieData, Prijzen prijzen) {
-        if ( energieData.isEmpty()) {
+        if (energieData.isEmpty()) {
             return "Geen data beschikbaar.";
 
         }
@@ -78,8 +82,6 @@ public class DataCalculator {
         return "Gemiddelde stroomprijs €: " + kostenStroom + "\n" +
                 "Gemiddelde gasprijs €: " + kostenGas;
     }
-    }
-
 
 
 //class WeeklyDataCalculator extends DataCalculator {
@@ -139,141 +141,52 @@ public class DataCalculator {
 //}
 
 
-class MonthlyDataCalculator extends DataCalculator {
-    public MonthlyDataCalculator(Prijzen prijzen) {
-        super(prijzen);
-    }
-//    private final Prijzen prijzen; // Prijzen object om mee te rekenen
-
-//    public MonthlyDataCalculator(Prijzen prijzen) {
-//        this.prijzen = prijzen;
-//    }
-
-    @Override
-    public String calculateAverage(ArrayList<EnergieData> energieDataLijst) {
-        if (energieDataLijst.isEmpty()) {
-            return "Geen data beschikbaar.";
-        }
-
-        // StringBuilder slaat de resultaten op
+    public String calculateMonthlyAverage() {
+        String query = "SELECT CEIL(prijs_id / 4.0) AS month, SUM(v_stroom) AS total_stroom, SUM(v_gas) AS total_gas " +
+                "FROM verbruik GROUP BY CEIL(prijs_id / 4.0)";
         StringBuilder monthlyResults = new StringBuilder();
-        // Counter om bij te houden hoeveel weken we hebben gehad
-        int count = 0;
 
-        double monthlyVerbruikStroom = 0;
-        double monthlyVerbruikGas = 0;
+        try (Connection conn = Database.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query);
+             ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                int month = rs.getInt("month");
+                double totalStroom = rs.getDouble("total_stroom");
+                double totalGas = rs.getDouble("total_gas");
 
-        // Loop door alle energieData en tel de nieuwe verbruiken op
-        for (EnergieData energieData : energieDataLijst) {
-            monthlyVerbruikStroom += energieData.getVerbruikStroom();
-            monthlyVerbruikGas += energieData.getVerbruikGas();
-            count++;
-
-            // Process elke vier weken als maand
-            if (count % 4 == 0) {
-                // Maak een nieuwe lijst met de laatste vier weken
-                ArrayList<EnergieData> currentMonthData = new ArrayList<>(energieDataLijst.subList(count - 4, count));
-                // Bereken de gemiddelde prijzen voor de maand
-                String monthlyPrices = calculateAveragePrices(currentMonthData, prijzen);
-
-                monthlyResults.append("Maand ").append(count / 4).append(" Gemiddeldes:\n")
-                        .append("Verbruik Stroom: ").append(monthlyVerbruikStroom).append("\n")
-                        .append("Verbruik Gas: ").append(monthlyVerbruikGas).append("\n")
-                        .append(monthlyPrices).append("\n\n");
-
-                // Reset maandelijkse totalen
-                monthlyVerbruikStroom = 0;
-                monthlyVerbruikGas = 0;
+                monthlyResults.append("Maand ").append(month).append(":\n")
+                        .append("Totaal Stroom: ").append(totalStroom).append("\n")
+                        .append("Totaal Gas: ").append(totalGas).append("\n\n");
             }
-        }
-
-        // Handle gedeeltelijke maand (minder dan 4 weken)
-        int remainingWeeks = count % 4;
-        if (remainingWeeks != 0) {
-            ArrayList<EnergieData> remainingMonthData = new ArrayList<>(energieDataLijst.subList(count - remainingWeeks, count));
-            String monthlyPrices = calculateAveragePrices(remainingMonthData, prijzen);
-
-            monthlyResults.append("Gedeeltelijke maand (").append(remainingWeeks).append(" weken) Gemiddeldes:\n")
-                    .append("Verbruik Stroom: ").append(monthlyVerbruikStroom).append("\n")
-                    .append("Verbruik Gas: ").append(monthlyVerbruikGas).append("\n")
-                    .append(monthlyPrices).append("\n");
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
 
         return monthlyResults.toString();
     }
-}
 
 
-class YearlyDataCalculator extends DataCalculator {
-    public YearlyDataCalculator(Prijzen prijzen) {
-        super(prijzen);
-    }
-//    private final Prijzen prijzen; // Prijzen object om mee te rekenen
-//
-//    public YearlyDataCalculator(Prijzen prijzen) {
-//        this.prijzen = prijzen;
-//    }
-
-    @Override
-    public String calculateAverage(ArrayList<EnergieData> energieDataLijst) {
-        if (energieDataLijst.isEmpty()) {
-            return "Geen data beschikbaar.";
-        }
-
+    public String calculateYearlyAverages() {
+        String query = "SELECT CEIL(prijs_id / 52.0) AS year, SUM(v_stroom) AS total_stroom, SUM(v_gas) AS total_gas " +
+                "FROM verbruik GROUP BY CEIL(prijs_id / 52.0)";
         StringBuilder yearlyResults = new StringBuilder();
-        int count = 0;
 
-        double yearlyVerbruikStroom = 0;
-        double yearlyVerbruikGas = 0;
+        try (Connection conn = Database.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query);
+             ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                int year = rs.getInt("year");
+                double totalStroom = rs.getDouble("total_stroom");
+                double totalGas = rs.getDouble("total_gas");
 
-        for (EnergieData energieData : energieDataLijst) {
-            yearlyVerbruikStroom += energieData.getVerbruikStroom();
-            yearlyVerbruikGas += energieData.getVerbruikGas();
-            count++;
-
-            if (count % 52 == 0) {
-                ArrayList<EnergieData> currentYearData = new ArrayList<>(energieDataLijst.subList(count - 12, count));
-                String yearlyPrices = calculateAveragePrices(currentYearData, prijzen);
-                yearlyResults.append("Jaar ").append(count / 52).append(" Gemiddeldes:\n")
-                        .append("Verbruik Stroom: ").append(yearlyVerbruikStroom).append("\n")
-                        .append("Verbruik Gas: ").append(yearlyVerbruikGas).append("\n\n")
-                        .append(yearlyPrices).append("\n\n");
-
-                yearlyVerbruikStroom = 0;
-                yearlyVerbruikGas = 0;
+                yearlyResults.append("Year ").append(year).append(":\n")
+                        .append("Total Stroom: ").append(totalStroom).append("\n")
+                        .append("Total Gas: ").append(totalGas).append("\n\n");
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
 
-//        if (count % 365 != 0) {
-//            int remainingDays = count % 365;
-//            yearlyResults.append("Gedeeltelijk jaar (").append(remainingDays).append(" dagen) Gemiddeldes:\n")
-//                    .append("Verbruik Stroom: ").append(yearlyVerbruikStroom / remainingDays).append("\n")
-//                    .append("Verbruik Gas: ").append(yearlyVerbruikGas / remainingDays).append("\n\n");
-//        }
         return yearlyResults.toString();
-    }
-
-    public String calculateAveragePrices(ArrayList<Prijzen> prijzenLijst, ArrayList<EnergieData> energieData) {
-        if (prijzenLijst.isEmpty() || energieData.isEmpty()) {
-            return "Geen data beschikbaar.";
-        }
-
-        Prijzen laatstePrijzen = prijzenLijst.get(prijzenLijst.size() - 1);
-        double strPrijs = laatstePrijzen.getStroomPrijs();
-        double gasPrijs = laatstePrijzen.getGasPrijs();
-
-        double totaalStroomVerbruik = 0;
-        double totaalGasVerbruik = 0;
-
-        for (EnergieData energieDatum : energieData) {
-            totaalStroomVerbruik += energieDatum.getVerbruikStroom();
-            totaalGasVerbruik += energieDatum.getVerbruikGas();
-        }
-
-        double kostenStroom = totaalStroomVerbruik * strPrijs;
-        double kostenGas = totaalGasVerbruik * gasPrijs;
-
-        return "Gemiddelde stroomkosten: €" + kostenStroom + "\n" +
-                "Gemiddelde gaskosten: €" + kostenGas;
     }
 }

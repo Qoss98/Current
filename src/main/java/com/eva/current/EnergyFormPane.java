@@ -58,27 +58,18 @@ public class EnergyFormPane extends GridPane {
         // setonAction logica voor de buttons
         verzend.setOnAction(e -> handleSubmit());
         toonGemiddelde.setOnAction(e -> {
-            if (energieData.isEmpty()) {
-                outputOpgeslagen.setText("Er zijn nog geen gegevens ingevoerd");
-            } else {
+
+                Database database = new Database();
                 DataCalculator calculator = new DataCalculator(prijzen);
-                String result = calculator.calculateAveragePrices(energieData, prijzen);
-                outputPrijs.setText(result);
 
-//                WeeklyDataCalculator weeklyDataCalculator = new WeeklyDataCalculator(prijzen);
-//                String averageWeek = weeklyDataCalculator.calculateAverage(energieData);
-//                outputWeek.setText(averageWeek);
+                // Calculate and display monthly averages
+                String monthlyAverages = calculator.calculateMonthlyAverage();
+                outputMaand.setText(monthlyAverages);
 
-                MonthlyDataCalculator monthlyDataCalculator = new MonthlyDataCalculator(prijzen);
-                String averageMonth = monthlyDataCalculator.calculateAverage(energieData);
-                outputMaand.setText(averageMonth);
+                // Calculate and display yearly averages
+                String yearlyAverages = calculator.calculateYearlyAverages();
+                outputJaar.setText(yearlyAverages);
 
-                YearlyDataCalculator yearlyDataCalculator = new YearlyDataCalculator(prijzen);
-                String averageYear = yearlyDataCalculator.calculateAverage(energieData);
-                outputJaar.setText(averageYear);
-
-
-            }
         });
     }
 
@@ -91,13 +82,18 @@ public class EnergyFormPane extends GridPane {
             }
 
             // EnergieData object creeeren
-            EnergieData data = new EnergieData(
+//            EnergieData data = new EnergieData(
+//                    Double.parseDouble(txtVerbruikStroom.getText()),
+//                    Double.parseDouble(txtVerbruikGas.getText())
+//            );
+
+            Database database = new Database();
+            database.addVerbruik(
                     Double.parseDouble(txtVerbruikStroom.getText()),
                     Double.parseDouble(txtVerbruikGas.getText())
             );
-
-            energieData.add(data);
-            outputOpgeslagen.setText("Data opgeslagen. Totaal aantal: " + energieData.size());
+//            energieData.add(data);
+            outputOpgeslagen.setText("Data opgeslagen.");
         }
         // Catch met foutmelding
         catch (NumberFormatException ex) {
