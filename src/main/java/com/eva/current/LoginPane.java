@@ -96,11 +96,21 @@ public class LoginPane extends GridPane {
                 return;
             }
 
-            Prijzen prijzen = new Prijzen(
-                    Double.parseDouble(txtGas.getText()),
-                    Double.parseDouble(txtStroom.getText()),
-                    Double.parseDouble(txtVoorschot.getText())
+//            Prijzen prijzen = new Prijzen(
+//                    Double.parseDouble(txtGas.getText()),
+//                    Double.parseDouble(txtStroom.getText()),
+//                    Double.parseDouble(txtVoorschot.getText())
+//
+//            );
 
+            Database database = new Database();
+            database.addKlant(
+                    Integer.parseInt(txtKlantnr.getText()),
+                    txtVNaam.getText(),
+                    txtANaam.getText(),
+                    Double.parseDouble(txtVoorschot.getText()),
+                    Double.parseDouble(txtGas.getText()),
+                    Double.parseDouble(txtStroom.getText())
             );
 
 //            prijzenLijst.add(prijzen);
