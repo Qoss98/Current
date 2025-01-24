@@ -7,7 +7,8 @@ import java.util.ArrayList;
 
 public class EnergyFormPane extends GridPane {
     // Velden definieren
-    private final Prijzen prijzen; // Store the Prijzen object
+    private final Prijzen prijzen;// Store the Prijzen object
+    String test = "test";
 
     private final TextField txtVerbruikStroom = new TextField();
     private final TextField txtVerbruikGas = new TextField();
