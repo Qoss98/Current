@@ -23,13 +23,16 @@ public class LoginPane extends GridPane {
     private final DatePicker dataVanafStroom = new DatePicker();
     private final DatePicker dataTotStroom = new DatePicker();
 
-    private final Button verzend;
+    private final Button loginButton;
+    private final SceneManager sceneManager;
 
-//    ArrayList<Prijzen> prijzenLijst = new ArrayList<>();
+    //    ArrayList<Prijzen> prijzenLijst = new ArrayList<>();
     private Prijzen prijzen;
+    public static int klantnr;
 
     public LoginPane(SceneManager sceneManager, Constraints constraints) {
-        this.verzend = new Button("Verzend");
+        this.sceneManager = sceneManager;
+        this.loginButton = new Button("login");
 
         // GridPane setup
         setVgap(10);
@@ -57,10 +60,10 @@ public class LoginPane extends GridPane {
                 klantnr, txtKlantnr, vNaam, txtVNaam, aNaam, txtANaam,
                 jVoorschot, txtVoorschot, hgas, txtGas, dataVanafGasL, dataVanafGas,
                 dataTotGasL, dataTotGas, hstroom, txtStroom, dataVanafStroomL, dataVanafStroom,
-                dataTotStroomL, dataTotStroom, verzend, output
+                dataTotStroomL, dataTotStroom, loginButton, output
         );
 
-        GridPane.setConstraints(verzend, 0, 12);
+        GridPane.setConstraints(loginButton, 0, 12);
         GridPane.setConstraints(output, 0, 13);
 
         // Set action for the "verzend" button
@@ -68,16 +71,10 @@ public class LoginPane extends GridPane {
     }
 
     private void setOnAction(SceneManager sceneManager) {
-        verzend.setOnAction(e -> {
+        loginButton.setOnAction(e -> {
             handleSubmit();
 
             // Pass the last entered Prijzen to EnergyFormPane
-
-            prijzen = new Prijzen(
-                    Double.parseDouble(txtGas.getText()),
-                    Double.parseDouble(txtStroom.getText()),
-                    Double.parseDouble(txtVoorschot.getText())
-            );
 
             EnergyFormPane energyFormPane = new EnergyFormPane(new Constraints(), prijzen);
             Scene inputScene = new Scene(energyFormPane, 800, 600);
@@ -88,13 +85,15 @@ public class LoginPane extends GridPane {
     }
 
 
-
     private void handleSubmit() {
         try {
             if (txtGas.getText().isEmpty() || txtStroom.getText().isEmpty()) {
                 System.out.println("Please fill in all fields");
                 return;
-            }
+            } else if (Database.hasKlantEntry()) {
+                System.out.println("Klantnummer bestaat al");
+
+            } else {
 
 //            Prijzen prijzen = new Prijzen(
 //                    Double.parseDouble(txtGas.getText()),
@@ -103,19 +102,40 @@ public class LoginPane extends GridPane {
 //
 //            );
 
-            Database database = new Database();
-            database.addKlant(
-                    Integer.parseInt(txtKlantnr.getText()),
-                    txtVNaam.getText(),
-                    txtANaam.getText(),
-                    Double.parseDouble(txtVoorschot.getText()),
-                    Double.parseDouble(txtGas.getText()),
-                    Double.parseDouble(txtStroom.getText())
-            );
+                Database database = new Database();
+                database.addKlant(
+                        Integer.parseInt(txtKlantnr.getText()),
+                        txtVNaam.getText(),
+                        txtANaam.getText(),
+                        Double.parseDouble(txtVoorschot.getText()),
+                        Double.parseDouble(txtGas.getText()),
+                        Double.parseDouble(txtStroom.getText())
+                );
+
+            }
 
 //            prijzenLijst.add(prijzen);
         } catch (NumberFormatException e) {
             System.out.println("Please enter a valid number");
+        }
+    }
+
+    public void handleLogin() {
+        String klantnrText = txtKlantnr.getText();
+
+        if (klantnrText.isEmpty()) {
+            System.out.println("Please enter a valid klantnummer");
+            return;
+        }
+        try {
+            int klantnr = Integer.parseInt(klantnrText);
+            LoginPane.klantnr = klantnr;  // Store the klantnr globally in the Session class
+            System.out.println("Login successful! klantnr: " + klantnr);
+
+            // Proceed to the next pane or screen, like EnergyFormPane
+            // Example: switch to EnergyFormPane here
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid klantnummer format");
         }
     }
 }

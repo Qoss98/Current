@@ -27,5 +27,9 @@ public class SceneManager {
             System.out.println("Scene " + name + " not found!");
         }
     }
+
+    public Stage getStage() {
+        return stage;
+    }
 }
 

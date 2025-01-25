@@ -1,14 +1,16 @@
 package com.eva.current;
 
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
+import javafx.stage.Stage;
 
 import java.util.ArrayList;
 
 public class EnergyFormPane extends GridPane {
     // Velden definieren
     private final Prijzen prijzen;// Store the Prijzen object
-    String test = "test";
+    private int klantnr;
 
     private final TextField txtVerbruikStroom = new TextField();
     private final TextField txtVerbruikGas = new TextField();
@@ -58,21 +60,29 @@ public class EnergyFormPane extends GridPane {
 
         // setonAction logica voor de buttons
         verzend.setOnAction(e -> handleSubmit());
+
+
         toonGemiddelde.setOnAction(e -> {
 
-                Database database = new Database();
-                DataCalculator calculator = new DataCalculator(prijzen);
+            SceneManager sceneManager = new SceneManager((Stage) getScene().getWindow());
+            InfoPane infoPane = new InfoPane(sceneManager);
+            Scene infoScene = new Scene(infoPane, 1500, 800);
 
-                // Calculate and display monthly averages
-                String monthlyAverages = calculator.calculateMonthlyAverage();
-                outputMaand.setText(monthlyAverages);
+            // Add the scene to the SceneManager
+            sceneManager.addScene("info", infoScene);
 
-                // Calculate and display yearly averages
-                String yearlyAverages = calculator.calculateYearlyAverages();
-                outputJaar.setText(yearlyAverages);
-
+            // Switch to the InfoPane scene
+            sceneManager.switchTo("info");
         });
     }
+
+//    public void setKlantnr(int klantnr) {
+//        this.klantnr = klantnr;
+//    }
+//
+//    public int getKlantnr() {
+//        return klantnr;
+//    }
 
     private void handleSubmit() {
         try {
@@ -82,23 +92,20 @@ public class EnergyFormPane extends GridPane {
                 return;
             }
 
-            // EnergieData object creeeren
-//            EnergieData data = new EnergieData(
-//                    Double.parseDouble(txtVerbruikStroom.getText()),
-//                    Double.parseDouble(txtVerbruikGas.getText())
-//            );
+
+
+
+
 
             Database database = new Database();
             database.addVerbruik(
                     Double.parseDouble(txtVerbruikStroom.getText()),
                     Double.parseDouble(txtVerbruikGas.getText())
             );
-//            energieData.add(data);
             outputOpgeslagen.setText("Data opgeslagen.");
-        }
-        // Catch met foutmelding
-        catch (NumberFormatException ex) {
+        } catch (NumberFormatException ex) {
             outputOpgeslagen.setText("Vul geldige getallen in");
         }
     }
+
 }
