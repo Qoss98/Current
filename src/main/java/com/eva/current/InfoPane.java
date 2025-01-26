@@ -45,29 +45,23 @@ public class InfoPane extends BorderPane {
         yearlyPricesList.setItems(yearlyPrices);
 
 
-        Button deleteButton = new Button("Delete Selected Entry");
+        Button deleteButton = new Button("Delete Entry");
         deleteButton.setOnAction(e -> deleteSelectedEntry());
 
-        Button editButton = new Button("Edit Selected Entry");
+        Button editButton = new Button("Edit Entry");
         editButton.setOnAction(e -> editSelectedEntry());
 
-        Button backButton = new Button("Back");
+        Button backButton = new Button("Terug");
         backButton.setOnAction(e ->
                 sceneManager.switchTo("login")
         );
-
-        Button refreshMonthlyButton = new Button("Refresh Monthly Averages");
-        refreshMonthlyButton.setOnAction(e -> loadMonthlyAverages());
-
-        Button refreshYearlyButton = new Button("Refresh Yearly Averages");
-        refreshYearlyButton.setOnAction(e -> loadYearlyAverages());
 
 // Add buttons to the UI
 
 
         VBox leftPanel = new VBox(10, new Label("Verbruik Entries:"), verbruikList, deleteButton, editButton);
-        VBox centerPanel = new VBox(10, new Label("Maandelijkse prijzen:"), monthlyPricesList, refreshMonthlyButton);
-        VBox rightPanel = new VBox(10, new Label("Jaarlijkse prijzen:"), yearlyPricesList, refreshYearlyButton, backButton);
+        VBox centerPanel = new VBox(10, new Label("Maandelijkse prijzen:"), monthlyPricesList);
+        VBox rightPanel = new VBox(10, new Label("Jaarlijkse prijzen:"), yearlyPricesList, backButton);
 
         setLeft(leftPanel);
         setCenter(centerPanel);
@@ -110,8 +104,9 @@ public class InfoPane extends BorderPane {
     private void loadMonthlyAverages() {
         monthlyPrices.clear(); // Clear the existing entries
 
-        String query = "SELECT CEIL(prijs_id / 4.0) AS month, AVG(v_stroom) AS avg_stroom, AVG(v_gas) AS avg_gas, " +
-                "AVG(s_prijs) AS avg_stroom_prijs, AVG(g_prijs) AS avg_gas_prijs " +
+        String query = "SELECT CEIL(prijs_id / 4.0) AS month, " +
+                "AVG(v_stroom) AS avg_stroom, AVG(v_gas) AS avg_gas, " + // Average usage
+                "SUM(s_prijs) AS total_stroom_prijs, SUM(g_prijs) AS total_gas_prijs " + // Total prices
                 "FROM verbruik JOIN klant ON verbruik.klant_id = klant.klantnr " +
                 "GROUP BY CEIL(prijs_id / 4.0)";
 
@@ -120,18 +115,18 @@ public class InfoPane extends BorderPane {
              ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
                 int month = rs.getInt("month");
-                double avgStroom = rs.getDouble("avg_stroom");
-                double avgGas = rs.getDouble("avg_gas");
-                double avgStroomPrijs = rs.getDouble("avg_stroom_prijs");
-                double avgGasPrijs = rs.getDouble("avg_gas_prijs");
+                double avgStroom = rs.getDouble("avg_stroom"); // Average stroom usage
+                double avgGas = rs.getDouble("avg_gas");       // Average gas usage
+                double totalStroomPrijs = rs.getDouble("total_stroom_prijs"); // Total stroom price
+                double totalGasPrijs = rs.getDouble("total_gas_prijs");       // Total gas price
 
                 // Format the result and add it to the monthlyPrices list
-                String result = String.format("Month %d:\n" +
-                                "  Average Stroom Usage: %.2f kWh\n" +
-                                "  Average Gas Usage: %.2f m3\n" +
-                                "  Average Stroom Price: €%.2f\n" +
-                                "  Average Gas Price: €%.2f\n",
-                        month, avgStroom, avgGas, avgStroomPrijs, avgGasPrijs);
+                String result = String.format("Maand %d:\n" +
+                                "  Gemiddeld Stroomverbruik: %.2f kWh\n" +
+                                "  Gemiddeld Gasverbruik: %.2f m3\n" +
+                                "  Totaalprijs Stroom: €%.2f\n" +
+                                "  Totaalprijs Gas: €%.2f\n",
+                        month, avgStroom, avgGas, totalStroomPrijs, totalGasPrijs);
                 monthlyPrices.add(result);
             }
         } catch (SQLException e) {
@@ -142,8 +137,9 @@ public class InfoPane extends BorderPane {
     private void loadYearlyAverages() {
         yearlyPrices.clear(); // Clear the existing entries
 
-        String query = "SELECT CEIL(prijs_id / 52.0) AS year, AVG(v_stroom) AS avg_stroom, AVG(v_gas) AS avg_gas, " +
-                "AVG(s_prijs) AS avg_stroom_prijs, AVG(g_prijs) AS avg_gas_prijs " +
+        String query = "SELECT CEIL(prijs_id / 52.0) AS year, " +
+                "AVG(v_stroom) AS avg_stroom, AVG(v_gas) AS avg_gas, " + // Average usage
+                "SUM(s_prijs) AS total_stroom_prijs, SUM(g_prijs) AS total_gas_prijs " + // Total prices
                 "FROM verbruik JOIN klant ON verbruik.klant_id = klant.klantnr " +
                 "GROUP BY CEIL(prijs_id / 52.0)";
 
@@ -152,25 +148,24 @@ public class InfoPane extends BorderPane {
              ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
                 int year = rs.getInt("year");
-                double avgStroom = rs.getDouble("avg_stroom");
-                double avgGas = rs.getDouble("avg_gas");
-                double avgStroomPrijs = rs.getDouble("avg_stroom_prijs");
-                double avgGasPrijs = rs.getDouble("avg_gas_prijs");
+                double avgStroom = rs.getDouble("avg_stroom"); // Average stroom usage
+                double avgGas = rs.getDouble("avg_gas");       // Average gas usage
+                double totalStroomPrijs = rs.getDouble("total_stroom_prijs"); // Total stroom price
+                double totalGasPrijs = rs.getDouble("total_gas_prijs");       // Total gas price
 
                 // Format the result and add it to the yearlyPrices list
-                String result = String.format("Year %d:\n" +
-                                "  Average Stroom Usage: %.2f kWh\n" +
-                                "  Average Gas Usage: %.2f m3\n" +
-                                "  Average Stroom Price: €%.2f\n" +
-                                "  Average Gas Price: €%.2f\n",
-                        year, avgStroom, avgGas, avgStroomPrijs, avgGasPrijs);
+                String result = String.format("Jaar %d:\n" +
+                                "  Gemiddeld Stroomverbruik: %.2f kWh\n" +
+                                "  Gemiddeld Gasverbruik: %.2f m3\n" +
+                                "  Totaalprijs Stroom: €%.2f\n" +
+                                "  Totaalprijs Gas: €%.2f\n",
+                        year, avgStroom, avgGas, totalStroomPrijs, totalGasPrijs);
                 yearlyPrices.add(result);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
-
     // Delete de geselecteerde verbruik entry
     private void deleteSelectedEntry() {
         String selectedEntry = verbruikList.getSelectionModel().getSelectedItem();
@@ -236,8 +231,9 @@ public class InfoPane extends BorderPane {
     }
 
     public String calculateMonthlyAverages() {
-        String query = "SELECT CEIL(prijs_id / 4.0) AS month, AVG(v_stroom) AS avg_stroom, AVG(v_gas) AS avg_gas, " +
-                "AVG(s_prijs) AS avg_stroom_prijs, AVG(g_prijs) AS avg_gas_prijs " +
+        String query = "SELECT CEIL(prijs_id / 4.0) AS month, " +
+                "AVG(v_stroom) AS avg_stroom, AVG(v_gas) AS avg_gas, " + // Average usage
+                "SUM(v_stroom * s_prijs) AS total_stroom_prijs, SUM(v_gas * g_prijs) AS total_gas_prijs " + // Total prices
                 "FROM verbruik JOIN klant ON verbruik.klant_id = klant.klantnr " +
                 "GROUP BY CEIL(prijs_id / 4.0)";
         StringBuilder monthlyResults = new StringBuilder();
@@ -247,16 +243,17 @@ public class InfoPane extends BorderPane {
              ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
                 int month = rs.getInt("month");
-                double avgStroom = rs.getDouble("avg_stroom");
-                double avgGas = rs.getDouble("avg_gas");
-                double avgStroomPrijs = rs.getDouble("avg_stroom_prijs");
-                double avgGasPrijs = rs.getDouble("avg_gas_prijs");
+                double avgStroom = rs.getDouble("avg_stroom"); // Average stroom usage
+                double avgGas = rs.getDouble("avg_gas");       // Average gas usage
+                double totalStroomPrijs = rs.getDouble("total_stroom_prijs"); // Total stroom price
+                double totalGasPrijs = rs.getDouble("total_gas_prijs");       // Total gas price
 
-                monthlyResults.append("Month ").append(month).append(":\n")
-                        .append("  Average Stroom Usage: ").append(avgStroom).append(" kWh\n")
-                        .append("  Average Gas Usage: ").append(avgGas).append(" m3\n")
-                        .append("  Average Stroom Price: €").append(avgStroomPrijs).append("\n")
-                        .append("  Average Gas Price: €").append(avgGasPrijs).append("\n\n");
+                // Format the result and add it to the monthlyResults
+                monthlyResults.append("Maand ").append(month).append(":\n")
+                        .append("  Gemiddeld stroomgebruik: ").append(avgStroom).append(" kWh\n")
+                        .append("  Gemiddeld gasgebruik: ").append(avgGas).append(" m3\n")
+                        .append("  Totale stroomprijs: €").append(totalStroomPrijs).append("\n")
+                        .append("  Totale gasprijs: €").append(totalGasPrijs).append("\n\n");
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -266,8 +263,9 @@ public class InfoPane extends BorderPane {
     }
 
     public String calculateYearlyAverages() {
-        String query = "SELECT CEIL(prijs_id / 52.0) AS year, AVG(v_stroom) AS avg_stroom, AVG(v_gas) AS avg_gas, " +
-                "AVG(s_prijs) AS avg_stroom_prijs, AVG(g_prijs) AS avg_gas_prijs " +
+        String query = "SELECT CEIL(prijs_id / 52.0) AS year, " +
+                "AVG(v_stroom) AS avg_stroom, AVG(v_gas) AS avg_gas, " + // Average usage
+                "SUM(v_stroom * s_prijs) AS total_stroom_prijs, SUM(v_gas * g_prijs) AS total_gas_prijs " + // Total prices
                 "FROM verbruik JOIN klant ON verbruik.klant_id = klant.klantnr " +
                 "GROUP BY CEIL(prijs_id / 52.0)";
         StringBuilder yearlyResults = new StringBuilder();
@@ -277,16 +275,17 @@ public class InfoPane extends BorderPane {
              ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
                 int year = rs.getInt("year");
-                double avgStroom = rs.getDouble("avg_stroom");
-                double avgGas = rs.getDouble("avg_gas");
-                double avgStroomPrijs = rs.getDouble("avg_stroom_prijs");
-                double avgGasPrijs = rs.getDouble("avg_gas_prijs");
+                double avgStroom = rs.getDouble("avg_stroom"); // Average stroom usage
+                double avgGas = rs.getDouble("avg_gas");       // Average gas usage
+                double totalStroomPrijs = rs.getDouble("total_stroom_prijs"); // Total stroom price
+                double totalGasPrijs = rs.getDouble("total_gas_prijs");       // Total gas price
 
-                yearlyResults.append("Year ").append(year).append(":\n")
-                        .append("  Average Stroom Usage: ").append(avgStroom).append(" kWh\n")
-                        .append("  Average Gas Usage: ").append(avgGas).append(" m3\n")
-                        .append("  Average Stroom Price: €").append(avgStroomPrijs).append("\n")
-                        .append("  Average Gas Price: €").append(avgGasPrijs).append("\n\n");
+                // Format the result and add it to the yearlyResults
+                yearlyResults.append("Jaar ").append(year).append(":\n")
+                        .append("  Gemiddeld stroomgebruik: ").append(avgStroom).append(" kWh\n")
+                        .append("  Gemiddeld gasgebruik: ").append(avgGas).append(" m3\n")
+                        .append("  Totale stroomprijs: €").append(totalStroomPrijs).append("\n")
+                        .append("  Totale gasprijs: €").append(totalGasPrijs).append("\n\n");
             }
         } catch (SQLException e) {
             e.printStackTrace();

@@ -29,16 +29,16 @@ public class Database {
     }
 
     // Add a new klant entry
-    public static void addKlant(int klantnr, String vNaam, String aNaam, double sPrijs, double gPrijs, double voorschot) {
-        String query = "INSERT INTO klant (klantnr, v_naam, a_naam, s_prijs, g_prijs, voorschot) VALUES (?, ?, ?, ?, ?, ?)";
+    public static void addKlant(int klantnr, String vNaam, String aNaam, double voorschot, double sPrijs, double gPrijs) {
+        String query = "INSERT INTO klant (klantnr, v_naam, a_naam, voorschot, s_prijs, g_prijs) VALUES (?, ?, ?, ?, ?, ?)";
         try (Connection conn = getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setInt(1, klantnr);
-            stmt.setString(2, vNaam);
-            stmt.setString(3, aNaam);
-            stmt.setDouble(4, sPrijs);
-            stmt.setDouble(5, gPrijs);
-            stmt.setDouble(6, voorschot);
+            stmt.setInt(1, klantnr); // Add klantnr
+            stmt.setString(2, vNaam); // Add v_naam
+            stmt.setString(3, aNaam); // Add a_naam
+            stmt.setDouble(4, voorschot); // Add voorschot
+            stmt.setDouble(5, sPrijs); // Add s_prijs
+            stmt.setDouble(6, gPrijs); // Add g_prijs
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
