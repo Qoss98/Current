@@ -27,8 +27,9 @@ public class EnergyFormPane extends GridPane {
 
     ArrayList<EnergieData> energieData = new ArrayList<>();
 
-    public EnergyFormPane(Constraints constraints, Prijzen prijzen) {
+    public EnergyFormPane(Constraints constraints, Prijzen prijzen, int klantnr) {
         this.prijzen = prijzen;
+        this.klantnr = klantnr;
         // GridPane setup
         setVgap(10);
         setHgap(10);
@@ -92,13 +93,10 @@ public class EnergyFormPane extends GridPane {
                 return;
             }
 
-
-
-
-
-
+            // Add verbruik entry with klantnr
             Database database = new Database();
             database.addVerbruik(
+                    klantnr, // Pass the klantnr
                     Double.parseDouble(txtVerbruikStroom.getText()),
                     Double.parseDouble(txtVerbruikGas.getText())
             );

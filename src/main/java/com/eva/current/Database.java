@@ -12,18 +12,20 @@ public class Database {
         return DriverManager.getConnection(URL, USER, PASSWORD);
     }
 
-    public static boolean hasKlantEntry() {
-        String query = "SELECT COUNT(*) AS count FROM klant";
+    public static boolean hasKlantEntry(int klantnr) {
+        String query = "SELECT COUNT(*) AS count FROM klant WHERE klantnr = ?";
         try (Connection conn = getConnection();
-             PreparedStatement stmt = conn.prepareStatement(query);
-             ResultSet rs = stmt.executeQuery()) {
-            if (rs.next()) {
-                return rs.getInt("count") > 0;
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, klantnr); // Set the klantnr parameter
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("count") > 0; // Return true if count > 0
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return false;
+        return false; // Return false if an error occurs or no rows are found
     }
 
     // Add a new klant entry
@@ -44,12 +46,14 @@ public class Database {
     }
 
     // Add a new verbruik entry
-    public static void addVerbruik(double vGas, double vStroom) {
-        String query = "INSERT INTO verbruik (v_gas, v_stroom) VALUES (?, ?)";
+    public static void addVerbruik(int klantId, double vGas, double vStroom) {
+        System.out.println("Adding verbruik entry for klant " + klantId);
+        String query = "INSERT INTO verbruik (v_gas, v_stroom, klant_id) VALUES (?, ?, ?)";
         try (Connection conn = getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setDouble(1, vGas);
             stmt.setDouble(2, vStroom);
+            stmt.setInt(3, klantId); // Add klant_id
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();

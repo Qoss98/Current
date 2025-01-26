@@ -74,9 +74,11 @@ public class LoginPane extends GridPane {
         loginButton.setOnAction(e -> {
             handleSubmit();
 
+
+            int klantnr = Integer.parseInt(txtKlantnr.getText());
             // Pass the last entered Prijzen to EnergyFormPane
 
-            EnergyFormPane energyFormPane = new EnergyFormPane(new Constraints(), prijzen);
+            EnergyFormPane energyFormPane = new EnergyFormPane(new Constraints(), prijzen, klantnr);
             Scene inputScene = new Scene(energyFormPane, 800, 600);
 
             sceneManager.addScene("input", inputScene);
@@ -90,31 +92,27 @@ public class LoginPane extends GridPane {
             if (txtGas.getText().isEmpty() || txtStroom.getText().isEmpty()) {
                 System.out.println("Please fill in all fields");
                 return;
-            } else if (Database.hasKlantEntry()) {
-                System.out.println("Klantnummer bestaat al");
-
-            } else {
-
-//            Prijzen prijzen = new Prijzen(
-//                    Double.parseDouble(txtGas.getText()),
-//                    Double.parseDouble(txtStroom.getText()),
-//                    Double.parseDouble(txtVoorschot.getText())
-//
-//            );
-
-                Database database = new Database();
-                database.addKlant(
-                        Integer.parseInt(txtKlantnr.getText()),
-                        txtVNaam.getText(),
-                        txtANaam.getText(),
-                        Double.parseDouble(txtVoorschot.getText()),
-                        Double.parseDouble(txtGas.getText()),
-                        Double.parseDouble(txtStroom.getText())
-                );
-
             }
 
-//            prijzenLijst.add(prijzen);
+            int klantnr = Integer.parseInt(txtKlantnr.getText());
+
+            // Check if klantnr already exists
+            if (Database.hasKlantEntry(klantnr)) {
+                System.out.println("Klantnummer bestaat al");
+                return;
+            }
+
+            // Add klant entry
+            Database database = new Database();
+            database.addKlant(
+                    klantnr,
+                    txtVNaam.getText(),
+                    txtANaam.getText(),
+                    Double.parseDouble(txtVoorschot.getText()),
+                    Double.parseDouble(txtGas.getText()),
+                    Double.parseDouble(txtStroom.getText())
+            );
+
         } catch (NumberFormatException e) {
             System.out.println("Please enter a valid number");
         }
