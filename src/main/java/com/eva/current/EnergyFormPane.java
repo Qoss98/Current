@@ -76,14 +76,7 @@ public class EnergyFormPane extends GridPane {
             sceneManager.switchTo("info");
         });
     }
-
-//    public void setKlantnr(int klantnr) {
-//        this.klantnr = klantnr;
-//    }
-//
-//    public int getKlantnr() {
-//        return klantnr;
-//    }
+    
 
     private void handleSubmit() {
         try {

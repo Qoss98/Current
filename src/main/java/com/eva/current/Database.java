@@ -16,19 +16,19 @@ public class Database {
         String query = "SELECT COUNT(*) AS count FROM klant WHERE klantnr = ?";
         try (Connection conn = getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setInt(1, klantnr); // Set the klantnr parameter
+            stmt.setInt(1, klantnr); // set de klantnr parameter
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
-                    return rs.getInt("count") > 0; // Return true if count > 0
+                    return rs.getInt("count") > 0; // Return true als er een entry is gevonden
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return false; // Return false if an error occurs or no rows are found
+        return false; // Return false als er geen error is opgetreden, maar er geen entry is gevonden
     }
 
-    // Add a new klant entry
+    // Nieuwe klant entry toevoegen
     public static void addKlant(int klantnr, String vNaam, String aNaam, double voorschot, double sPrijs, double gPrijs) {
         String query = "INSERT INTO klant (klantnr, v_naam, a_naam, voorschot, s_prijs, g_prijs) VALUES (?, ?, ?, ?, ?, ?)";
         try (Connection conn = getConnection();
@@ -45,9 +45,9 @@ public class Database {
         }
     }
 
-    // Add a new verbruik entry
+    // Add een nieuwe verbruik entry
     public static void addVerbruik(int klantId, double vGas, double vStroom) {
-        System.out.println("Adding verbruik entry for klant " + klantId);
+        System.out.println("Adding verbruik entry for klant " + klantId); // Debugging code, foreign key deed moeilijk
         String query = "INSERT INTO verbruik (v_gas, v_stroom, klant_id) VALUES (?, ?, ?)";
         try (Connection conn = getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
